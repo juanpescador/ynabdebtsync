@@ -8,12 +8,21 @@ class YnabBudget:
             raise ValueError("Budget JSON is None")
         if budget_json == "":
             raise ValueError("Budget JSON is empty")
+
         try:
             self.data = json.loads(budget_json)
         except ValueError as e:
             raise YnabBudgetMalformedError("Budget JSON is malformed",
                                            inner_message=e,
                                            budget_json=budget_json)
+
+    def category_id_from_name(self, name):
+        for master_category in self.data["masterCategories"]:
+            for sub_category in master_category:
+                if sub_category["name"] == name:
+                    return sub_category["entityId"]
+
+        return None
 
 class YnabBudgetMalformedError(Exception):
     """Exception raised when the YNAB budget JSON is malformed."""
