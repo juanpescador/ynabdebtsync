@@ -31,19 +31,24 @@ class YnabBudget:
                           .format(name))
 
     def transactions_by_category_name(self, name):
+        """Return a list of transactions that are assigned to the given
+        category name.
+        """
         category_id = self.category_id_from_name(name)
 
         return self.__all_transactions_by_category_id(category_id)
 
-    def __all_transactions_by_category_id(self, category_id, transactions_to_check=None):
-        """Method to construct a list of transactions assigned to the given
-        category ID. Subtransactions are also taken into account, by passing
-        a transaction's subtransactions via the transactions_to_check argument
-        in recursive calls.
+    def __all_transactions_by_category_id(self,
+                                          category_id,
+                                          transactions_to_check=None):
+        """Recursive method that constructs a list of transactions assigned to
+        the given category ID. Subtransactions are also taken into account, by
+        passing a transaction's subtransactions in recursive calls via the
+        transactions_to_check argument.
         """
         transactions_to_add = []
 
-        # Base case, check all transactions.
+        # Base case, start with the budget's transactions.
         if transactions_to_check is None:
             transactions_to_check = self.data["transactions"]
 
