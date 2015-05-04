@@ -13,13 +13,13 @@ def test_instantiating_budget_with_json_works():
     assert ynab_budget.data["fileMetaData"]["budgetDataVersion"] == "4.2"
 
 def test_instantiating_budget_without_json_raises_exception():
-    with assert_raises(ynabbudget.YnabBudgetMalformedError) as e:
+    with assert_raises(ValueError) as e:
         ynab_budget = ynabbudget.YnabBudget(None)
 
     assert_equal(e.exception.message, "Budget JSON is None")
 
 def test_instantiating_budget_with_empty_json_raises_exception():
-    with assert_raises(ynabbudget.YnabBudgetMalformedError) as e:
+    with assert_raises(ValueError) as e:
         ynab_budget = ynabbudget.YnabBudget("")
 
     assert_equal(e.exception.message, "Budget JSON is empty")
