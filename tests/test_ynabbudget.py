@@ -1,6 +1,6 @@
 # -*- coding: utf8 -*-
 import os
-from nose.tools import assert_raises, assert_equal
+from nose.tools import assert_raises, assert_equal, assert_true
 from ynabdebtsync import ynabbudget
 
 budget_file_path = os.path.join(os.path.dirname(__file__), "budget.json")
@@ -67,3 +67,12 @@ def test_transactions_by_category_name_no_transactions_returns_empty_list():
     transactions = ynab_budget.transactions_by_category_name("Car Payment")
 
     assert_equal(len(transactions), 0)
+
+def test_master_categories_to_subcategories_structure_is_correct():
+    ynab_budget = ynabbudget.YnabBudget(budget_json)
+
+    category_hierarchy = ynab_budget.master_categories_to_subcategories()
+
+    assert_true("Giving" in category_hierarchy)
+    assert_true("Charitable" in category_hierarchy["Giving"])
+    assert_equal(category_hierarchy["Giving"]["Charitable"], "A6")

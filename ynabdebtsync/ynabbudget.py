@@ -18,6 +18,21 @@ class YnabBudget:
                                            inner_message=e,
                                            budget_json=budget_json)
 
+    def master_categories_to_subcategories(self):
+        """Return a dictionary keyed by the budget's master categories. Each
+        master category's value is a dictionary of the subcategory names to
+        IDs.
+        """
+        category_hierarchy = {}
+
+        for master_category in self.data["masterCategories"]:
+            category_container = {}
+            for sub_category in master_category["subCategories"]:
+                category_container[sub_category["name"]] = sub_category["entityId"]
+            category_hierarchy[master_category["name"]] = category_container
+
+        return category_hierarchy
+
     def category_id_from_name(self, name):
         """Return the category ID for a given category name, case-insensitive.
         Throws a LookupError if there is no category with the given name.
