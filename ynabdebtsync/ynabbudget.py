@@ -3,7 +3,9 @@
 import json
 
 class YnabBudget:
+    """YNAB budget reading."""
     def __init__(self, budget_json):
+        """budget_json is the Budget.yfull file's contents."""
         if budget_json is None:
             raise ValueError("Budget JSON is None")
         if budget_json == "":
@@ -17,19 +19,19 @@ class YnabBudget:
                                            budget_json=budget_json)
 
     def category_id_from_name(self, name):
+        """Return the category ID for a given category name, case-insensitive.
+        Throws a LookupError if there is no category with the given name.
+        """
         for master_category in self.data["masterCategories"]:
             for sub_category in master_category["subCategories"]:
-                if sub_category["name"] == name:
+                if sub_category["name"].lower() == name.lower():
                     return sub_category["entityId"]
 
-        return None
+        raise LookupError("No category with name '{0}' exists in the budget"
+                          .format(name))
 
     def transactions_by_category_name(self, name):
         category_id = self.category_id_from_name(name)
-
-        if category_id is None:
-            raise LookupError("No category with name '{0}' exists in the budget"
-                              .format(name))
 
         return self.__all_transactions_by_category_id(category_id)
 

@@ -31,10 +31,14 @@ def test_instantiating_budget_with_malformed_json_raises_exception():
 
     assert_equal(e.exception.message, "Budget JSON is malformed")
 
-def test_get_category_id_from_name_inexistent_category_returns_none():
+def test_get_category_id_from_name_inexistent_category_raises_exception():
     ynab_budget = ynabbudget.YnabBudget(budget_json)
 
-    assert_equal(ynab_budget.category_id_from_name("non existent category"), None)
+    with assert_raises(LookupError) as e:
+        ynab_budget.category_id_from_name("non existent category")
+
+    assert_equal(e.exception.message,
+                 "No category with name 'non existent category' exists in the budget")
 
 def test_get_category_id_from_name_existing_category_returns_id():
     ynab_budget = ynabbudget.YnabBudget(budget_json)
