@@ -39,7 +39,7 @@ def test_get_category_id_from_name_inexistent_category_returns_none():
 def test_get_category_id_from_name_existing_category_returns_id():
     ynab_budget = ynabbudget.YnabBudget(budget_json)
 
-    assert_equal(ynab_budget.category_id_from_name("Enric loans"), "0B268460-6D45-B9F9-C8BA-9748D21FE0DD")
+    assert_equal(ynab_budget.category_id_from_name("Test Debt Category"), "DEF375CA-58D2-D332-4C79-20862B7566F8")
 
 def test_transactions_by_category_name_inexistent_category_raises_exception():
     ynab_budget = ynabbudget.YnabBudget(budget_json)
@@ -53,6 +53,6 @@ def test_transactions_by_category_name_inexistent_category_raises_exception():
 def test_transactions_by_category_name_existing_category_returns_all_transactions():
     ynab_budget = ynabbudget.YnabBudget(budget_json)
 
-    transactions = ynab_budget.transactions_by_category_name("Motorbike repairs")
+    transactions = ynab_budget.transactions_by_category_name("Test Debt Category")
 
-    assert_equal(len(transactions), 10)
+    assert_equal(len(transactions), 3)
