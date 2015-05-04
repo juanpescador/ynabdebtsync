@@ -60,3 +60,10 @@ def test_transactions_by_category_name_existing_category_returns_all_transaction
     transactions = ynab_budget.transactions_by_category_name("Test Debt Category")
 
     assert_equal(len(transactions), 3)
+
+def test_transactions_by_category_name_no_transactions_returns_empty_list():
+    ynab_budget = ynabbudget.YnabBudget(budget_json)
+
+    transactions = ynab_budget.transactions_by_category_name("Car Payment")
+
+    assert_equal(len(transactions), 0)
