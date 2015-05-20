@@ -1,6 +1,7 @@
 # -*- coding: utf8 -*-
 
 import json
+from decimal import Decimal
 
 class YnabBudget:
     """YNAB budget reading."""
@@ -84,6 +85,15 @@ class YnabBudget:
         # Turn into a generator so the results from this method can be iterated
         # over, allowing filtering by e.g. date in log(N) vs log(2N) time
         return transactions_to_add
+
+    def calculate_category_total(self, category_name):
+        transactions = self.transactions_by_category_name(category_name)
+
+        running_total = Decimal(0)
+        for transaction in transactions:
+            running_total += Decimal(transaction["amount"])
+
+        return running_total
 
 class YnabBudgetMalformedError(Exception):
     """Exception raised when the YNAB budget JSON is malformed."""

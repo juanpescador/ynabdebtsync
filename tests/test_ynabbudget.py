@@ -2,6 +2,7 @@
 import os
 from nose.tools import assert_raises, assert_equal, assert_true
 from ynabdebtsync import ynabbudget
+from decimal import Decimal
 
 budget_file_path = os.path.join(os.path.dirname(__file__), "budget.json")
 
@@ -77,6 +78,11 @@ def test_master_categories_to_subcategories_structure_is_correct():
     assert_true("Charitable" in category_hierarchy["Giving"])
     assert_equal(category_hierarchy["Giving"]["Charitable"], "A6")
 
+def test_calculate_category_total_returns_correct_amount():
+    ynab_budget = ynabbudget.YnabBudget(budget_json)
+    assert_equal(ynab_budget.calculate_category_total("Test Debt Category"), Decimal(-5))
+
+# YnabComparer
 def test_categories_reconcile_if_same_number_of_transactions():
     budget_comparer = ynabbudget.YnabBudgetComparer(budget_json, budget_json)
 
