@@ -81,6 +81,8 @@ class YnabBudget:
                     )
                 )
 
+        # Turn into a generator so the results from this method can be iterated
+        # over, allowing filtering by e.g. date in log(N) vs log(2N) time
         return transactions_to_add
 
 class YnabBudgetMalformedError(Exception):
@@ -90,3 +92,15 @@ class YnabBudgetMalformedError(Exception):
         self.message = message
         self.inner_message = inner_message
         self.budget_json = budget_json
+
+class YnabBudgetComparer:
+    def __init__(self, this_budget_json, other_budget_json):
+        self.this_budget = YnabBudget(this_budget_json)
+        self.other_budget = YnabBudget(other_budget_json)
+
+    def categories_are_reconciled(self, this_category_name, other_category_name):
+        this_transactions = self.this_budget.transactions_by_category_name(this_category_name)
+        other_transactions = self.other_budget.transactions_by_category_name(other_category_name)
+
+        return len(this_transactions) == len(other_transactions)
+

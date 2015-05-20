@@ -76,3 +76,8 @@ def test_master_categories_to_subcategories_structure_is_correct():
     assert_true("Giving" in category_hierarchy)
     assert_true("Charitable" in category_hierarchy["Giving"])
     assert_equal(category_hierarchy["Giving"]["Charitable"], "A6")
+
+def test_categories_reconcile_if_same_number_of_transactions():
+    budget_comparer = ynabbudget.YnabBudgetComparer(budget_json, budget_json)
+
+    assert_true(budget_comparer.categories_are_reconciled("Test Debt Category", "Test Debt Category"))
