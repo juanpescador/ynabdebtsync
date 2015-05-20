@@ -110,3 +110,24 @@ class YnabBudgetComparer:
 
     def categories_are_reconciled(self, this_category_name, other_category_name):
         return abs(self.this_budget.calculate_category_total(this_category_name)) == abs(self.other_budget.calculate_category_total(other_category_name))
+
+    def get_missing_transactions(self, this_category_name, other_category_name):
+        this_transactions = self.this_budget.transactions_by_category_name(this_category_name).sort(key=lambda transaction: transaction["amount"])
+        other_transactions = self.other_budget.transactions_by_category_name(other_category_name).sort(key=lambda transaction: transaction["amount"])
+
+        this_missing_transactions = []
+        other_missing_transactions = []
+
+        # Need to change to while i < len(this_transactions) && y < len(other_transactions)
+        # and advance each variable independently.
+        for i in xrange(max(len(this_transactions), len(other_transactions))):
+            this_amount = Decimal(this_transactions[i]["amount"])
+            other_amount = Decimal(other_transactions[i]["amount"])
+            if this_amount != other_amount:
+                # This budget is missing the current transaction from the other budget.
+                if this_amount > other_amount:
+                    this_missing_transactions.append(other_transactions[i])
+                else:
+                    other_missing_transactions.append(this_transactions[i])
+
+        return
