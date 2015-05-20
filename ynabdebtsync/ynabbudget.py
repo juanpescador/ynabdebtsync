@@ -109,5 +109,4 @@ class YnabBudgetComparer:
         self.other_budget = YnabBudget(other_budget_json)
 
     def categories_are_reconciled(self, this_category_name, other_category_name):
-        return self.this_budget.calculate_category_total(this_category_name) == self.other_budget.calculate_category_total(other_category_name)
-
+        return abs(self.this_budget.calculate_category_total(this_category_name)) == abs(self.other_budget.calculate_category_total(other_category_name))
