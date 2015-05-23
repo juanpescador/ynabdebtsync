@@ -92,11 +92,11 @@ def test_calculate_category_total_returns_correct_amount():
 
 # YnabComparer
 def test_categories_reconcile_if_category_totals_are_equal():
-    budget_comparer = ynabbudget.YnabBudgetComparer(budget_json, budget_json)
+    budget_comparer = ynabbudget.YnabBudgetComparer(budget_json, "Test Debt Category", budget_json, "Test Debt Category")
 
-    assert_true(budget_comparer.categories_are_reconciled("Test Debt Category", "Test Debt Category"))
+    assert_true(budget_comparer.categories_are_reconciled())
 
 def test_get_missing_transactions_of_amount_returns_missing_transactions():
-    budget_comparer = ynabbudget.YnabBudgetComparer(this_budget_json, other_budget_json)
+    budget_comparer = ynabbudget.YnabBudgetComparer(budget_json, "Test Debt Category", budget_json, "Test Debt Category")
 
     assert_equal(len(budget_comparer._get_missing_transactions_of_amount(5)), 1)

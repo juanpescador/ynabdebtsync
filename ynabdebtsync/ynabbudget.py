@@ -104,14 +104,16 @@ class YnabBudgetMalformedError(Exception):
         self.budget_json = budget_json
 
 class YnabBudgetComparer:
-    def __init__(self, this_budget_json, other_budget_json):
+    def __init__(self, this_budget_json, this_category_name, other_budget_json, other_category_name):
         self.this_budget = YnabBudget(this_budget_json)
+        self.this_category_name = this_category_name
         self.other_budget = YnabBudget(other_budget_json)
+        self.other_category_name = other_category_name
 
-    def categories_are_reconciled(self, this_category_name, other_category_name):
-        return abs(self.this_budget.calculate_category_total(this_category_name)) == abs(self.other_budget.calculate_category_total(other_category_name))
+    def categories_are_reconciled(self):
+        return abs(self.this_budget.calculate_category_total(self.this_category_name)) == abs(self.other_budget.calculate_category_total(self.other_category_name))
 
-    def get_missing_transactions(self, this_category_name, other_category_name):
+    def get_missing_transactions(self):
         """Gets the transactions missing from each budget.
 
         To identify which transactions are missing, both transactions lists are
@@ -194,7 +196,7 @@ class YnabBudgetComparer:
         was for) is a nice-have.
         """
         this_transactions = self.this_budget.transactions_by_category_name(
-            this_category_name
+            self.this_category_name
         ).sort(key=lambda transaction: Decimal(transaction["amount"]))
 
         # other_transactions amounts are the inverse of this_transactions
@@ -203,7 +205,7 @@ class YnabBudgetComparer:
         # E.g. this_transactions = Joe's transactions = $-5, $+2, $+7
         #    other_transactions = Jane's transactions = $+5, $-2, $-7
         other_transactions = self.other_budget.transactions_by_category_name(
-            other_category_name
+            self.other_category_name
         ).sort(key=lambda transaction: Decimal(transaction["amount"]), reverse=True)
 
         this_missing_transactions = []
@@ -260,9 +262,11 @@ class YnabBudgetComparer:
                 "other_missing_transactions": other_missing_transactions}
 
     def _get_missing_transactions_of_amount(self, amount):
-        """Compares the two lists of transactions whose amount equals the given
-        amount. One of the lists is a superset of the other list and this
-        method returns the relative complement, i.e. of the list with more
-        transactions, those that are missing from the list with less
-        transactions."""
+        """For each budget's transactions, compiles a list of those whose
+        amount equals the given amount argument. One of the lists is a superset
+        of the other list and this method returns the relative complement, i.e.
+        of the list with more transactions, those that are missing from the
+        list with less transactions."""
+
+        return []
 
