@@ -5,9 +5,17 @@ from ynabdebtsync import ynabbudget
 from decimal import Decimal
 
 budget_file_path = os.path.join(os.path.dirname(__file__), "budget.json")
+this_transactions_file_path = os.path.join(os.path.dirname(__file__), "this_transactions.json")
+other_transactions_file_path = os.path.join(os.path.dirname(__file__), "other_transactions.json")
 
 with open (budget_file_path) as budget_file:
     budget_json = budget_file.read().replace('\n', '')
+
+with open(this_transactions_file_path) as this_transactions_file:
+    this_transactions_json = this_transactions_file.read().replace('\n', '')
+
+with open(other_transactions_file_path) as other_transactions_file:
+    other_transactions_json = other_transactions_file.read().replace('\n', '')
 
 def test_instantiating_budget_with_json_works():
     ynab_budget = ynabbudget.YnabBudget(budget_json)
@@ -87,3 +95,8 @@ def test_categories_reconcile_if_category_totals_are_equal():
     budget_comparer = ynabbudget.YnabBudgetComparer(budget_json, budget_json)
 
     assert_true(budget_comparer.categories_are_reconciled("Test Debt Category", "Test Debt Category"))
+
+def test_get_missing_transactions_of_amount_returns_missing_transactions():
+    budget_comparer = ynabbudget.YnabBudgetComparer(this_transactions_json, other_transactions_json)
+
+    assert_equal(len(budget_comparer._get_missing_transactions_of_amount(5)), 1)

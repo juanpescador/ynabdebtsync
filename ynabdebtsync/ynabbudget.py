@@ -52,9 +52,9 @@ class YnabBudget:
         """
         category_id = self.category_id_from_name(name)
 
-        return self.__all_transactions_by_category_id(category_id)
+        return self._all_transactions_by_category_id(category_id)
 
-    def __all_transactions_by_category_id(self,
+    def _all_transactions_by_category_id(self,
                                           category_id,
                                           transactions_to_check=None):
         """Recursive method that constructs a list of transactions assigned to
@@ -76,7 +76,7 @@ class YnabBudget:
             # if any.
             if "subTransactions" in transaction:
                 transactions_to_add.extend(
-                    self.__all_transactions_by_category_id(
+                    self._all_transactions_by_category_id(
                         category_id,
                         transaction["subTransactions"]
                     )
@@ -226,20 +226,43 @@ class YnabBudgetComparer:
         for this_transaction in this_transactions:
             this_amount = Decimal(this_transaction["amount"])
             other_amount = Decimal(other_transaction["amount"])
-            # this_transactions is missing one or more transactions of
-            # amount == other_amount.
-            if this_amount > other_amount:
-                this_missing_transactions.extend(
-                    self.get_missing_transactions_of_amount(other_amount,
-                                                            this_transactions,
-                                                            other_transactions)
-                )
+            # When the amounts don't add up to zero, cancelling each other out,
+            # it means there is a discrepancy in transactions.
+            if this_amount + other_amount != 0:
+                # this_transactions is missing one or more transactions of
+                # amount == -other_amount.
+                if this_amount > other_amount:
+                    this_missing_transactions.extend(
+                        self._get_missing_transactions_of_amount(other_amount)
+                    )
+                # other_transactions is missing one or more transactions of
+                # amount == -other_amount.
+                elif abs(this_amount) < abs(other_amount):
+                    other_missing_transactions.extend(
+                        self._get_missing_transactions_of_amount(this_amount)
+                    )
+                # Transactions are missing from both this_transactions and
+                # other_transactions.
+                elif abs(this_amount) == abs(other_amount):
+                    this_missing_transactions.extend(
+                        self._get_missing_transactions_of_amount(other_amount)
+                    )
+                    other_missing_transactions.extend(
+                        self._get_missing_transactions_of_amount(this_amount)
+                    )
 
-
-        # If other_transactions hasn't reached the end, they're missing from
-        # this_transactions.
+        # If other_transactions hasn't reached the end, the remaining transactions
+        # are missing from this_transactions.
         for other_transaction in other_transactions:
             this_missing_transactions.append(other_transaction)
 
         return {"this_missing_transactions": this_missing_transactions,
                 "other_missing_transactions": other_missing_transactions}
+
+    def _get_missing_transactions_of_amount(self, amount):
+        """Compares the two lists of transactions whose amount equals the given
+        amount. One of the lists is a superset of the other list and this
+        method returns the relative complement, i.e. of the list with more
+        transactions, those that are missing from the list with less
+        transactions."""
+
