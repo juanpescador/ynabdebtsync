@@ -112,11 +112,39 @@ class YnabBudgetComparer:
         return abs(self.this_budget.calculate_category_total(this_category_name)) == abs(self.other_budget.calculate_category_total(other_category_name))
 
     def get_missing_transactions(self, this_category_name, other_category_name):
-        """Gets the transactions missing from each budget. Sort the
-        transactions by value. An inflow in this_transactions will be an
-        outflow in other_transactions, so reversing other_transactions order
-        means its indices correspond with the inverse transaction from
-        this_transactions."""
+        """Gets the transactions missing from each budget.
+
+        To identify which transactions are missing, both transactions lists are
+        sorted by transaction amount. "this" category's in ascending order,
+        "other" category's in descending order. An inflow in this_transactions
+        will be an outflow in other_transactions, so if both categories have
+        the same transactions, this_transactions[n] will correspond to
+        other_transactions[n]. One will be an inflow, i.e. positive amount and
+        the other will be an outflow, i.e. negative amount.
+
+        As soon as the amount for a given (this_transactions[n],
+        other_transactions[n]) pair is not equal, it means that one of the
+        categories is missing one or more transactions. Due to the ascending
+        order of this_transactions, if the difference is
+        this_transactions[n] > other_transactions[n], this_category is the one
+        missing transaction(s) from other_category:
+
+            this_transactions                       other_transactions
+            amount  memo                            amount  memo
+            $5      loan money for beer             $-5     borrow money for beer
+         -> $10     loan money for sandwich      -> $5      loan money for nachos
+                                                    $-10    borrow money for sandwich
+
+        As seen here, this_transactions current amount is $10, while it is $5
+        for other_transactions, because other_transactions contains a
+        transaction for $5 which is missing from this_transactions. This is the
+        simplest case: there could be more than one transaction of amount $5
+        missing from this_transactions.
+
+        Conversely, if the difference is
+        this_transactions[n] < other_transactions[n], other_transactions is the
+        one missing transaction(s) from this_category.
+        """
         this_transactions = self.this_budget.transactions_by_category_name(this_category_name).sort(key=lambda transaction: Decimal(transaction["amount"]))
         # other_transactions amounts are the inverse of this_transactions
         # amounts. Sort in reverse order so the indices of other_transactions
