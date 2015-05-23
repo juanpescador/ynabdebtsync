@@ -219,6 +219,9 @@ class YnabBudgetComparer:
             # transactions.
             other_missing_transactions = this_transactions
 
+        # Don't have a handle on this_transactions iterator, so can't call .next()
+        # to bump its position. This sentinel is used instead.
+        iterations_to_skip = 0
         # Each category's transactions are sorted by amount. Therefore, if the
         # amounts ever differ it is because the category whose current
         # transaction's amount is greater than the other is missing transactions
@@ -226,6 +229,12 @@ class YnabBudgetComparer:
         # difference of transactions for that amount between the two
         # categories.
         for this_transaction in this_transactions:
+            # Skip this iteration if we're bumping this_transactions past any
+            # transactions that other_transactions was missing.
+            if iterations_to_skip > 0:
+                iterations_to_skip -= 1
+                continue
+
             this_amount = Decimal(this_transaction["amount"])
             other_amount = Decimal(other_transaction["amount"])
             # When the amounts don't add up to zero, cancelling each other out,
@@ -234,24 +243,35 @@ class YnabBudgetComparer:
                 # this_transactions is missing one or more transactions of
                 # amount == -other_amount.
                 if this_amount > other_amount:
-                    this_missing_transactions.extend(
-                        self._get_missing_transactions_of_amount(other_amount)
-                    )
+                    missing_transactions = self._get_missing_transactions_of_amount(other_amount)
+                    this_missing_transactions.extend(missing_transactions)
+                    # Bump other_transactions iterator past the missing transactions.
+                    for transaction in missing_transactions:
+                        other_transaction = other_iter.next()
+
                 # other_transactions is missing one or more transactions of
                 # amount == -other_amount.
                 elif abs(this_amount) < abs(other_amount):
-                    other_missing_transactions.extend(
-                        self._get_missing_transactions_of_amount(this_amount)
-                    )
+                    missing_transactions = self._get_missing_transactions_of_amount(this_amount)
+                    other_missing_transactions.extend(missing_transactions)
+                    # Set the sentinel to allow bumping this_transactions past
+                    # the missing transactions.
+                    iterations_to_skip = len(missing_transactions)
+
                 # Transactions are missing from both this_transactions and
                 # other_transactions.
                 elif abs(this_amount) == abs(other_amount):
-                    this_missing_transactions.extend(
-                        self._get_missing_transactions_of_amount(other_amount)
-                    )
-                    other_missing_transactions.extend(
-                        self._get_missing_transactions_of_amount(this_amount)
-                    )
+                    missing_transactions = self._get_missing_transactions_of_amount(other_amount)
+                    this_missing_transactions.extend(missing_transactions)
+                    # Bump other_transactions iterator past the missing transactions.
+                    for transaction in missing_transactions:
+                        other_transaction = other_iter.next()
+
+                    missing_transactions = self._get_missing_transactions_of_amount(this_amount)
+                    other_missing_transactions.extend(missing_transactions)
+                    # Set the sentinel to allow bumping this_transactions past
+                    # the missing transactions.
+                    iterations_to_skip = len(missing_transactions)
 
         # If other_transactions hasn't reached the end, the remaining transactions
         # are missing from this_transactions.
@@ -267,6 +287,27 @@ class YnabBudgetComparer:
         of the other list and this method returns the relative complement, i.e.
         of the list with more transactions, those that are missing from the
         list with less transactions."""
+
+        this_transactions = self.this_budget.transactions_by_category_name(
+            self.this_category_name
+        )
+        this_transactions = [txn for txn in this_transactions if Decimal(txn["amount"]) == amount]
+        this_transactions = this_transactions.sort(key=lambda txn: txn["date"])
+
+        other_transactions = self.other_budget.transactions_by_category_name(
+            self.other_category_name
+        )
+        other_transactions = [txn for txn in other_transactions if Decimal(txn["amount"]) == amount]
+        other_transactions = other_transactions.sort(key=lambda txn: txn["date"])
+
+        missing_transactions = []
+
+        # Logic to compare transactions with each other, sorted by date, to find
+        # candidate missing transactions.
+        #other_iter = iter(other_transactions)
+        #other_transactions = other_iter.next()
+
+        #for this_transaction in this_transactions:
 
         return []
 
