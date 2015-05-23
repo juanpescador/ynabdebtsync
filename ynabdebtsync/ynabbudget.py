@@ -193,13 +193,18 @@ class YnabBudgetComparer:
         of missing transactions is deemed important, while the memo (what it
         was for) is a nice-have.
         """
-        this_transactions = self.this_budget.transactions_by_category_name(this_category_name).sort(key=lambda transaction: Decimal(transaction["amount"]))
+        this_transactions = self.this_budget.transactions_by_category_name(
+            this_category_name
+        ).sort(key=lambda transaction: Decimal(transaction["amount"]))
+
         # other_transactions amounts are the inverse of this_transactions
         # amounts. Sort in reverse order so the indices of other_transactions
         # match the inverse transaction of this_transactions.
         # E.g. this_transactions = Joe's transactions = $-5, $+2, $+7
         #    other_transactions = Jane's transactions = $+5, $-2, $-7
-        other_transactions = self.other_budget.transactions_by_category_name(other_category_name).sort(key=lambda transaction: Decimal(transaction["amount"]), reverse=True)
+        other_transactions = self.other_budget.transactions_by_category_name(
+            other_category_name
+        ).sort(key=lambda transaction: Decimal(transaction["amount"]), reverse=True)
 
         this_missing_transactions = []
         other_missing_transactions = []
@@ -211,7 +216,6 @@ class YnabBudgetComparer:
             # Other transactions was empty, it's missing all of this budget's
             # transactions.
             other_missing_transactions = this_transactions
-
 
         # Each category's transactions are sorted by amount. Therefore, if the
         # amounts ever differ it is because the category whose current
