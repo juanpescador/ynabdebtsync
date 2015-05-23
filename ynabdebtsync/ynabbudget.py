@@ -112,22 +112,54 @@ class YnabBudgetComparer:
         return abs(self.this_budget.calculate_category_total(this_category_name)) == abs(self.other_budget.calculate_category_total(other_category_name))
 
     def get_missing_transactions(self, this_category_name, other_category_name):
-        this_transactions = self.this_budget.transactions_by_category_name(this_category_name).sort(key=lambda transaction: transaction["amount"])
-        other_transactions = self.other_budget.transactions_by_category_name(other_category_name).sort(key=lambda transaction: transaction["amount"])
+        """Gets the transactions missing from each budget. Sort the
+        transactions by value. An inflow in this_transactions will be an
+        outflow in other_transactions, so reversing other_transactions order
+        means its indices correspond with the inverse transaction from
+        this_transactions."""
+        this_transactions = self.this_budget.transactions_by_category_name(this_category_name).sort(key=lambda transaction: Decimal(transaction["amount"]))
+        # other_transactions amounts are the inverse of this_transactions
+        # amounts. Sort in reverse order so the indices of other_transactions
+        # match the inverse transaction of this_transactions.
+        # E.g. this_transactions = Joe's transactions = $-5, $+2, $+7
+        #    other_transactions = Jane's transactions = $+5, $-2, $-7
+        other_transactions = self.other_budget.transactions_by_category_name(other_category_name).sort(key=lambda transaction: Decimal(transaction["amount"]), reverse=True)
 
         this_missing_transactions = []
         other_missing_transactions = []
 
-        # Need to change to while i < len(this_transactions) && y < len(other_transactions)
-        # and advance each variable independently.
-        for i in xrange(max(len(this_transactions), len(other_transactions))):
-            this_amount = Decimal(this_transactions[i]["amount"])
-            other_amount = Decimal(other_transactions[i]["amount"])
-            if this_amount != other_amount:
-                # This budget is missing the current transaction from the other budget.
-                if this_amount > other_amount:
-                    this_missing_transactions.append(other_transactions[i])
-                else:
-                    other_missing_transactions.append(this_transactions[i])
+        other_iter = iter(other_transactions)
+        try:
+            other_transaction = other_iter.next()
+        except StopIteration:
+            # Other transactions was empty, it's missing all of this budget's
+            # transactions.
+            other_missing_transactions = this_transactions
 
-        return
+
+        # Each category's transactions are sorted by amount. Therefore, if the
+        # amounts ever differ it is because the category whose current
+        # transaction's amount is greater than the other is missing transactions
+        # of the smaller amount. The number of transactions missing is the
+        # difference of transactions for that amount between the two
+        # categories.
+        for this_transaction in this_transactions:
+            this_amount = Decimal(this_transaction["amount"])
+            other_amount = Decimal(other_transaction["amount"])
+            # this_transactions is missing one or more transactions of
+            # amount == other_amount.
+            if this_amount > other_amount:
+                this_missing_transactions.extend(
+                    self.get_missing_transactions_of_amount(other_amount,
+                                                            this_transactions,
+                                                            other_transactions)
+                )
+
+
+        # If other_transactions hasn't reached the end, they're missing from
+        # this_transactions.
+        for other_transaction in other_transactions:
+            this_missing_transactions.append(other_transaction)
+
+        return {"this_missing_transactions": this_missing_transactions,
+                "other_missing_transactions": other_missing_transactions}
