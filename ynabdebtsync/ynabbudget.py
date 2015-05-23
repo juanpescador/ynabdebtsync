@@ -122,28 +122,48 @@ class YnabBudgetComparer:
         other_transactions[n]. One will be an inflow, i.e. positive amount and
         the other will be an outflow, i.e. negative amount.
 
-        As soon as the amount for a given (this_transactions[n],
-        other_transactions[n]) pair is not equal, it means that one of the
-        categories is missing one or more transactions. Due to the ascending
-        order of this_transactions, if the difference is
-        this_transactions[n] > other_transactions[n], this_category is the one
-        missing transaction(s) from other_category:
+        As soon as the absolute amounts for a given
+        (this_transactions[n], other_transactions[n]) pair are not equal, it
+        means that one of the categories is missing one or more transactions.
+        Due to the ascending order of this_transactions, if the comparison is
+            abs(this_transactions[n]) > abs(other_transactions[n])
+        then this_category_transactions_category is the one missing
+        transaction(s) from other_category:
 
             this_transactions                       other_transactions
             amount  memo                            amount  memo
-            $5      loan money for beer             $-5     borrow money for beer
-         -> $10     loan money for sandwich      -> $5      loan money for nachos
-                                                    $-10    borrow money for sandwich
+            $-5     loan money for nachos           $5      borrow money for nachos
+         -> $10     borrow money for sandwich    -> $-5     loan money for beer
+                                                    $-10    loan money for sandwich
 
-        As seen here, this_transactions current amount is $10, while it is $5
-        for other_transactions, because other_transactions contains a
-        transaction for $5 which is missing from this_transactions. This is the
-        simplest case: there could be more than one transaction of amount $5
-        missing from this_transactions.
+        As seen here, this_transactions[1] amount is $10, while it is $-5
+        for other_transactions[1]. other_transactions contains an outflow
+        transaction of $-5 but there isn't a matching inflow transaction of $5
+        in this_transactions. This is the simplest case: there could be more
+        than one inflow transaction of amount $5 missing from this_transactions.
 
-        Conversely, if the difference is
-        this_transactions[n] < other_transactions[n], other_transactions is the
-        one missing transaction(s) from this_category.
+        Conversely, if the comparison is
+            this_transactions[n] < other_transactions[n]
+        then other_transactions is the one missing transaction(s) from
+        this_category.
+
+        Once a divergence in amounts is identified, transactions of the
+        identified amount are compared to the other category's transactions of
+        the inverse amount. If the missing transaction's amount is $-5, i.e. it
+        was an outflow, all outflows of $-5 from that category are compared to
+        all inflows of $5 from the other category to find candidate missing
+        transactions.
+
+        While just adding the number of missing transactions would suffice to
+        bring the two categories into sync, it is much more useful to the user
+        if they can know what transactions were missing, e.g. when did the
+        transaction take place, and what was it for? Missing transaction
+        candidates are determined by matching the subset of transactions for a
+        given pair of amounts (inflows in one category, outflows in the other)
+        by date. If more than one missing transaction occurred on the same
+        date, the first one is chosen as a candidate, for simplicity. The date
+        of missing transactions is deemed important, while the memo (what it
+        was for) is a nice-have.
         """
         this_transactions = self.this_budget.transactions_by_category_name(this_category_name).sort(key=lambda transaction: Decimal(transaction["amount"]))
         # other_transactions amounts are the inverse of this_transactions
