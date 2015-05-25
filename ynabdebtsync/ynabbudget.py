@@ -291,14 +291,14 @@ class YnabBudgetComparer:
         this_transactions = self.this_budget.transactions_by_category_name(
             self.this_category_name
         )
-        this_transactions = [txn for txn in this_transactions if Decimal(txn["amount"]) == amount]
-        this_transactions = this_transactions.sort(key=lambda txn: txn["date"])
+        #this_transactions = [txn for txn in this_transactions if Decimal(txn["amount"]) == amount]
+        #this_transactions = this_transactions.sort(key=lambda txn: txn["date"])
 
         other_transactions = self.other_budget.transactions_by_category_name(
             self.other_category_name
         )
-        other_transactions = [txn for txn in other_transactions if Decimal(txn["amount"]) == amount]
-        other_transactions = other_transactions.sort(key=lambda txn: txn["date"])
+        #other_transactions = [txn for txn in other_transactions if Decimal(txn["amount"]) == amount]
+        #other_transactions = other_transactions.sort(key=lambda txn: txn["date"])
 
         missing_transactions = []
 
@@ -313,22 +313,58 @@ class YnabBudgetComparer:
         elif len(this_transactions) == len(other_transactions):
             raise ValueError("There are no missing transactions. Both budget categories contain the same number of transactions ({0}) for amount {1}".format(len(this_transactions), amount))
 
+        # Sentinel to know when iteration has ended.
+        done = object()
+
         superset_transactions_iter = iter(superset_transactions)
         # Superset is guaranteed to have at least one item. From the previous
         # comparisons to determine if this_transactions or other_transactions
         # is the superset, the only case where it could be empty is if both
         # this_transactions and other_transactions were empty, but then a
         # ValueError is raised and execution is stopped.
-        superset_transaction = superset_transactions_iter.next()
+        superset_transaction = next(superset_transactions_iter)
 
         subset_transactions_iter = iter(subset_transactions)
-        try:
-            subset_transaction = subset_transactions_iter.next()
-        except StopIteration:
+        subset_transaction = next(subset_transactions_iter, done)
+        if subset_transaction is done:
             # The subset is empty and is missing all of superset's transactions.
             return this_transactions
 
+        # superset_transactions is always longer than subset_transactions, and
+        # is always bumped in tandem with subset_transactions, so it's
+        # guaranteed that subset_transaction will be done before
+        # superset_transaction ever is.
+        while subset_transaction is not done:
+            # Found a missing transaction, add it and check the next
+            # subset_transaction.
+            if superset_transaction["date"] != subset_transaction["date"]:
+                missing_transactions.append(superset_transaction)
+                subset_transaction = next(subset_transactions_iter, done)
+            # Transactions match up, check the next pair. This is a naïve
+            # approach. If there are multiple transactions on the same date,
+            # the order between superset and subset might not be the same.
+            # Further, if one of the missing transactions is on the day where
+            # there are multiple transactions, due to ordering, we might choose
+            # the wrong transaction as candidate.
+            # TODO fuzzy compare memos for similar content?
+            else:
+                superset_transaction = next(superset_transactions_iter, done)
+                subset_transaction = next(subset_transactions_iter, done)
 
+        # Skip current superset_transaction if the last iteration was a missing
+        # transaction and it was already added.
+        if (superset_transaction is not done) and (
+            len(missing_transactions) > 0
+            and
+            superset_transaction is missing_transactions[-1]
+        ):
+            superset_transaction = next(superset_transactions, done)
 
-        return []
+        # If any superset_transactions are left, add them to
+        # missing_transactions.
+        while superset_transaction is not done:
+            missing_transactions.append(superset_transaction)
+            superset_transaction = next(superset_transactions_iter, done)
+
+        return missing_transactions
 
