@@ -302,12 +302,33 @@ class YnabBudgetComparer:
 
         missing_transactions = []
 
-        # Logic to compare transactions with each other, sorted by date, to find
-        # candidate missing transactions.
-        #other_iter = iter(other_transactions)
-        #other_transactions = other_iter.next()
+        # The superset can be either this budget's category's transactions or
+        # other budget's category's transactions, we only know at runtime.
+        if len(this_transactions) > len(other_transactions):
+            superset_transactions = this_transactions
+            subset_transactions = other_transactions
+        elif len(this_transactions) < len(other_transactions):
+            superset_transactions = other_transactions
+            subset_transactions = this_transactions
+        elif len(this_transactions) == len(other_transactions):
+            raise ValueError("There are no missing transactions. Both budget categories contain the same number of transactions ({0}) for amount {1}".format(len(this_transactions), amount))
 
-        #for this_transaction in this_transactions:
+        superset_transactions_iter = iter(superset_transactions)
+        # Superset is guaranteed to have at least one item. From the previous
+        # comparisons to determine if this_transactions or other_transactions
+        # is the superset, the only case where it could be empty is if both
+        # this_transactions and other_transactions were empty, but then a
+        # ValueError is raised and execution is stopped.
+        superset_transaction = superset_transactions_iter.next()
+
+        subset_transactions_iter = iter(subset_transactions)
+        try:
+            subset_transaction = subset_transactions_iter.next()
+        except StopIteration:
+            # The subset is empty and is missing all of superset's transactions.
+            return this_transactions
+
+
 
         return []
 
