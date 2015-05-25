@@ -291,13 +291,15 @@ class YnabBudgetComparer:
         this_transactions = self.this_budget.transactions_by_category_name(
             self.this_category_name
         )
-        this_transactions = [txn for txn in this_transactions if abs(Decimal(txn["amount"])) == abs(amount)]
+        this_transactions = [txn for txn in this_transactions
+                             if abs(Decimal(txn["amount"])) == abs(amount)]
         this_transactions.sort(key=lambda txn: txn["date"])
 
         other_transactions = self.other_budget.transactions_by_category_name(
             self.other_category_name
         )
-        other_transactions = [txn for txn in other_transactions if abs(Decimal(txn["amount"])) == abs(amount)]
+        other_transactions = [txn for txn in other_transactions
+                              if abs(Decimal(txn["amount"])) == abs(amount)]
         other_transactions.sort(key=lambda txn: txn["date"])
 
         missing_transactions = []
