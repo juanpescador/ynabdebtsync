@@ -368,5 +368,10 @@ class YnabBudgetComparer:
             missing_transactions.append(superset_transaction)
             superset_transaction = next(superset_transactions_iter, done)
 
+        target_missing_transactions_len = len(superset_transactions) - len(subset_transactions)
+
+        if len(missing_transactions) != target_missing_transactions_len:
+            raise ValueError("Cannot reliably detect missing transactions. This can happen if existing transaction dates don't match between the budgets.")
+
         return missing_transactions
 
