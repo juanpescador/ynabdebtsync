@@ -211,30 +211,26 @@ class YnabBudgetComparer:
         this_missing_transactions = []
         other_missing_transactions = []
 
+        # Sentinel to know when iteration has finished.
+        done = object()
+
         other_iter = iter(other_transactions)
-        try:
-            other_transaction = other_iter.next()
-        except StopIteration:
+        other_transaction = next(other_iter, done)
+        if other_transaction is done:
             # Other transactions was empty, it's missing all of this budget's
             # transactions.
             other_missing_transactions = this_transactions
 
-        # Don't have a handle on this_transactions iterator, so can't call .next()
-        # to bump its position. This sentinel is used instead.
-        iterations_to_skip = 0
+        this_iter = iter(this_transactions)
+        this_transaction = next(this_iter, done)
+
         # Each category's transactions are sorted by amount. Therefore, if the
         # amounts ever differ it is because the category whose current
         # transaction's amount is greater than the other is missing transactions
         # of the smaller amount. The number of transactions missing is the
         # difference of transactions for that amount between the two
         # categories.
-        for this_transaction in this_transactions:
-            # Skip this iteration if we're bumping this_transactions past any
-            # transactions that other_transactions was missing.
-            if iterations_to_skip > 0:
-                iterations_to_skip -= 1
-                continue
-
+        while this_transaction is not done:
             this_amount = Decimal(this_transaction["amount"])
             other_amount = Decimal(other_transaction["amount"])
             # When the amounts don't add up to zero, cancelling each other out,
@@ -247,16 +243,16 @@ class YnabBudgetComparer:
                     this_missing_transactions.extend(missing_transactions)
                     # Bump other_transactions iterator past the missing transactions.
                     for transaction in missing_transactions:
-                        other_transaction = other_iter.next()
+                        other_transaction = next(other_iter, done)
 
                 # other_transactions is missing one or more transactions of
                 # amount == -other_amount.
                 elif abs(this_amount) < abs(other_amount):
                     missing_transactions = self._get_missing_transactions_of_amount(this_amount)
                     other_missing_transactions.extend(missing_transactions)
-                    # Set the sentinel to allow bumping this_transactions past
-                    # the missing transactions.
-                    iterations_to_skip = len(missing_transactions)
+                    # Bump this_transactions iterator past missing transactions.
+                    for transaction in missing_transactions:
+                        this_transaction = next(this_iter, done)
 
                 # Transactions are missing from both this_transactions and
                 # other_transactions.
@@ -265,18 +261,19 @@ class YnabBudgetComparer:
                     this_missing_transactions.extend(missing_transactions)
                     # Bump other_transactions iterator past the missing transactions.
                     for transaction in missing_transactions:
-                        other_transaction = other_iter.next()
+                        other_transaction = next(other_iter, done)
 
                     missing_transactions = self._get_missing_transactions_of_amount(this_amount)
                     other_missing_transactions.extend(missing_transactions)
-                    # Set the sentinel to allow bumping this_transactions past
-                    # the missing transactions.
-                    iterations_to_skip = len(missing_transactions)
+                    # Bump this_transactions iterator past the missing transactions.
+                    for transaction in missing_transactions:
+                        this_transaction = next(this_iter, done)
 
         # If other_transactions hasn't reached the end, the remaining transactions
         # are missing from this_transactions.
-        for other_transaction in other_transactions:
+        while other_transaction is not done:
             this_missing_transactions.append(other_transaction)
+            other_transaction = next(other_iter, done)
 
         return this_missing_transactions, other_missing_transactions
 
