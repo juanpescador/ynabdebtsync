@@ -100,3 +100,9 @@ def test_get_missing_transactions_of_amount_returns_missing_transactions():
     budget_comparer = ynabbudget.YnabBudgetComparer(this_budget_json, "Test Debt Category", other_budget_json, "Test Debt Category")
 
     assert_equal(len(budget_comparer._get_missing_transactions_of_amount(5)), 1)
+
+def test_no_transactions_of_given_amount_throws_exception():
+    budget_comparer = ynabbudget.YnabBudgetComparer(this_budget_json, "Test Debt Category", other_budget_json, "Test Debt Category")
+
+    with assert_raises(ValueError) as e:
+        budget_comparer._get_missing_transactions_of_amount(3)
