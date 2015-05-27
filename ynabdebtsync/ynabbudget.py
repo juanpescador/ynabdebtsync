@@ -278,8 +278,7 @@ class YnabBudgetComparer:
         for other_transaction in other_transactions:
             this_missing_transactions.append(other_transaction)
 
-        return {"this_missing_transactions": this_missing_transactions,
-                "other_missing_transactions": other_missing_transactions}
+        return this_missing_transactions, other_missing_transactions
 
     def _get_missing_transactions_of_amount(self, amount):
         """For each budget's transactions, compiles a list of those whose
