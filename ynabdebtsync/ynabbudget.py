@@ -197,7 +197,8 @@ class YnabBudgetComparer:
         """
         this_transactions = self.this_budget.transactions_by_category_name(
             self.this_category_name
-        ).sort(key=lambda transaction: Decimal(transaction["amount"]))
+        )
+        this_transactions.sort(key=lambda transaction: Decimal(transaction["amount"]))
 
         # other_transactions amounts are the inverse of this_transactions
         # amounts. Sort in reverse order so the indices of other_transactions
@@ -206,7 +207,8 @@ class YnabBudgetComparer:
         #    other_transactions = Jane's transactions = $+5, $-2, $-7
         other_transactions = self.other_budget.transactions_by_category_name(
             self.other_category_name
-        ).sort(key=lambda transaction: Decimal(transaction["amount"]), reverse=True)
+        )
+        other_transactions.sort(key=lambda transaction: Decimal(transaction["amount"]), reverse=True)
 
         this_missing_transactions = []
         other_missing_transactions = []
