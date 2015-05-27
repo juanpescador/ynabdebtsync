@@ -347,7 +347,9 @@ class YnabBudgetComparer:
             # the order between superset and subset might not be the same.
             # Further, if one of the missing transactions is on the day where
             # there are multiple transactions, due to ordering, we might choose
-            # the wrong transaction as candidate.
+            # the wrong transaction as candidate. While the amount will be
+            # correct, the memo will be for another transaction and may confuse
+            # the user.
             # TODO fuzzy compare memos for similar content?
             else:
                 superset_transaction = next(superset_transactions_iter, done)
