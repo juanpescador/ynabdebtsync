@@ -96,10 +96,17 @@ def test_categories_reconcile_if_category_totals_are_equal():
 
     assert_true(budget_comparer.categories_are_reconciled())
 
-def test_get_missing_transactions_of_amount_returns_missing_transactions():
+def test_get_missing_transactions_of_amount_returns_correct_number_of_missing_transactions():
     budget_comparer = ynabbudget.YnabBudgetComparer(this_budget_json, "Test Debt Category", other_budget_json, "Test Debt Category")
 
     assert_equal(len(budget_comparer._get_missing_transactions_of_amount(5)), 1)
+
+def test_get_missing_transactions_of_amount_returns_correct_missing_transactions():
+    budget_comparer = ynabbudget.YnabBudgetComparer(this_budget_json, "Test Debt Category", other_budget_json, "Test Debt Category")
+
+    missing_transaction = budget_comparer._get_missing_transactions_of_amount(5)[0]
+    assert_equal(missing_transaction["memo"], "Borrow for nachos")
+    assert_equal(missing_transaction["amount"], 5)
 
 def test_no_transactions_of_given_amount_throws_exception():
     budget_comparer = ynabbudget.YnabBudgetComparer(this_budget_json, "Test Debt Category", other_budget_json, "Test Debt Category")
