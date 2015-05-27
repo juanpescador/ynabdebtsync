@@ -243,7 +243,7 @@ class YnabBudgetComparer:
                 # this_transactions is missing one or more transactions of
                 # amount == -other_amount.
                 if this_amount > other_amount:
-                    missing_transactions = self._get_missing_transactions_of_amount(other_amount)
+                    missing_transactions = self._get_missing_transactions_of_amount(-other_amount)
                     this_missing_transactions.extend(missing_transactions)
                     # Bump other_transactions iterator past the missing transactions.
                     for transaction in missing_transactions:
@@ -261,7 +261,7 @@ class YnabBudgetComparer:
                 # Transactions are missing from both this_transactions and
                 # other_transactions.
                 elif abs(this_amount) == abs(other_amount):
-                    missing_transactions = self._get_missing_transactions_of_amount(other_amount)
+                    missing_transactions = self._get_missing_transactions_of_amount(-other_amount)
                     this_missing_transactions.extend(missing_transactions)
                     # Bump other_transactions iterator past the missing transactions.
                     for transaction in missing_transactions:
@@ -280,25 +280,33 @@ class YnabBudgetComparer:
 
         return this_missing_transactions, other_missing_transactions
 
-    def _get_missing_transactions_of_amount(self, amount):
-        """For each budget's transactions, compiles a list of those whose
-        amount equals the given amount argument. One of the lists is a superset
-        of the other list and this method returns the relative complement, i.e.
-        of the list with more transactions, those that are missing from the
-        list with less transactions."""
+    def _get_missing_transactions_of_amount(self, this_amount):
+        """Gets the missing pair transactions for a given amount. A pair
+        transaction is a one that cancels out the transaction for the given
+        amount. E.g. if the amount is 5 (an inflow), its pair transaction in
+        the other budget is of amount -5, i.e. an outflow. this_amount gives
+        the cardinality of the transactions to look for, i.e. are we checking
+        for outflows from this_budget compared to inflows for other_budget, or
+        vice versa?
+
+        For each budget's transactions, compiles a list of pair transactions
+        for the given amount argument. One of the lists is a superset of the
+        other list and this method returns the relative complement, i.e. of the
+        list with more transactions, those that are missing from the list that
+        has less transactions."""
 
         this_transactions = self.this_budget.transactions_by_category_name(
             self.this_category_name
         )
         this_transactions = [txn for txn in this_transactions
-                             if abs(Decimal(txn["amount"])) == abs(amount)]
+                             if Decimal(txn["amount"]) == this_amount]
         this_transactions.sort(key=lambda txn: txn["date"])
 
         other_transactions = self.other_budget.transactions_by_category_name(
             self.other_category_name
         )
         other_transactions = [txn for txn in other_transactions
-                              if abs(Decimal(txn["amount"])) == abs(amount)]
+                              if Decimal(txn["amount"]) == -this_amount]
         other_transactions.sort(key=lambda txn: txn["date"])
 
         missing_transactions = []
@@ -312,7 +320,7 @@ class YnabBudgetComparer:
             superset_transactions = other_transactions
             subset_transactions = this_transactions
         elif len(this_transactions) == len(other_transactions):
-            raise ValueError("There are no missing transactions. Both budget categories contain the same number of transactions ({0}) for amount {1}".format(len(this_transactions), amount))
+            raise ValueError("There are no missing transactions. Both budget categories contain the same number of transactions ({0}) for amount {1}".format(len(this_transactions), this_amount))
 
         # Sentinel to know when iteration has ended.
         done = object()
@@ -329,7 +337,7 @@ class YnabBudgetComparer:
         subset_transaction = next(subset_transactions_iter, done)
         if subset_transaction is done:
             # The subset is empty and is missing all of superset's transactions.
-            return this_transactions
+            return superset_transactions
 
         # superset_transactions is always longer than subset_transactions, and
         # is always bumped in tandem with subset_transactions, so it's
