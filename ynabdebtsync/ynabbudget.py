@@ -246,7 +246,7 @@ class YnabBudgetComparer:
             if this_amount + other_amount != 0:
                 # this_transactions is missing one or more transactions of
                 # amount == -other_amount.
-                if this_amount > other_amount:
+                if abs(this_amount) < abs(other_amount):
                     missing_transactions = self._get_missing_transactions_of_amount(-other_amount)
                     this_missing_transactions.extend(missing_transactions)
                     # Bump other_transactions iterator past the missing transactions.
@@ -255,7 +255,7 @@ class YnabBudgetComparer:
 
                 # other_transactions is missing one or more transactions of
                 # amount == -other_amount.
-                elif abs(this_amount) < abs(other_amount):
+                elif abs(this_amount) > abs(other_amount):
                     missing_transactions = self._get_missing_transactions_of_amount(this_amount)
                     other_missing_transactions.extend(missing_transactions)
                     # Bump this_transactions iterator past missing transactions.
