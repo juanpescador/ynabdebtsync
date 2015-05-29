@@ -270,6 +270,11 @@ class YnabBudgetComparer:
                     # Bump this_transactions iterator past the missing transactions.
                     for transaction in missing_transactions:
                         this_transaction = next(this_iter, done)
+            # Amounts cancel each other out, representing a matching inflow
+            # and outflow. Check the next pair.
+            else:
+                this_transaction = next(this_iter, done)
+                other_transaction = next(other_iter, done)
 
         # If other_transactions hasn't reached the end, the remaining transactions
         # are missing from this_transactions.
