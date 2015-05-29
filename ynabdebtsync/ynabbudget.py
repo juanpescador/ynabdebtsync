@@ -76,6 +76,10 @@ class YnabBudget:
             # with the list of subtransactions assigned to the given category,
             # if any.
             if "subTransactions" in transaction:
+                # Subtransactions don't have their own date, add the parent
+                # transaction's date.
+                for subtransaction in transaction["subTransactions"]:
+                    subtransaction["date"] = transaction["date"]
                 transactions_to_add.extend(
                     self._transactions_from_category_id(
                         category_id,
