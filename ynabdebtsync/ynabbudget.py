@@ -341,11 +341,11 @@ class YnabBudgetComparer:
         # guaranteed that subset_transaction will be done before
         # superset_transaction ever is.
         while subset_transaction is not done:
-            # Found a missing transaction, add it and check the next
-            # subset_transaction.
+            # Subset is missing the current superset transaction. Add it and
+            # check the next superset_transaction.
             if superset_transaction["date"] != subset_transaction["date"]:
                 missing_transactions.append(superset_transaction)
-                subset_transaction = next(subset_transactions_iter, done)
+                superset_transaction = next(superset_transactions_iter, done)
             # Transactions match up, check the next pair. This is a naïve
             # approach. If there are multiple transactions on the same date,
             # the order between superset and subset might not be the same.
