@@ -317,7 +317,7 @@ class YnabBudgetComparer:
             superset_transactions = other_transactions
             subset_transactions = this_transactions
         elif len(this_transactions) == len(other_transactions):
-            raise ValueError("There are no missing transactions. Both budget categories contain the same number of transactions ({0}) for amount {1}".format(len(this_transactions), this_amount))
+            raise ValueError("There are no missing transactions. Both budget categories contain the same number of transactions ({}) for this_amount = {} and other_amount = {}".format(len(this_transactions), this_amount, -this_amount))
 
         # Sentinel to know when iteration has ended.
         done = object()
