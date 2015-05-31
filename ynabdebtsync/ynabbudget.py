@@ -1,7 +1,6 @@
 # -*- coding: utf8 -*-
 
 import json
-from decimal import Decimal
 
 class YnabBudget:
     """YNAB budget reading."""
@@ -95,9 +94,9 @@ class YnabBudget:
     def calculate_category_total(self, category_name):
         transactions = self.transactions_by_category_name(category_name)
 
-        running_total = Decimal(0)
+        running_total = 0
         for transaction in transactions:
-            running_total += Decimal(transaction["amount"])
+            running_total += transaction["amount"]
 
         return running_total
 
@@ -204,7 +203,7 @@ class YnabBudgetComparer:
         this_transactions = self.this_budget.transactions_by_category_name(
             self.this_category_name
         )
-        this_transactions.sort(key=lambda transaction: Decimal(transaction["amount"]),
+        this_transactions.sort(key=lambda transaction: transaction["amount"],
                                reverse=True)
 
         # other_transactions amounts are the inverse of this_transactions
@@ -215,7 +214,7 @@ class YnabBudgetComparer:
         other_transactions = self.other_budget.transactions_by_category_name(
             self.other_category_name
         )
-        other_transactions.sort(key=lambda transaction: Decimal(transaction["amount"]))
+        other_transactions.sort(key=lambda transaction: transaction["amount"])
 
         this_missing_transactions = []
         other_missing_transactions = []
@@ -240,8 +239,8 @@ class YnabBudgetComparer:
         # difference of transactions for that amount between the two
         # categories.
         while this_transaction is not done:
-            this_amount = Decimal(this_transaction["amount"])
-            other_amount = Decimal(other_transaction["amount"])
+            this_amount = this_transaction["amount"]
+            other_amount = other_transaction["amount"]
             # When the amounts don't add up to zero, cancelling each other out,
             # it means there is a discrepancy in transactions.
             if this_amount + other_amount != 0:
@@ -296,14 +295,14 @@ class YnabBudgetComparer:
             self.this_category_name
         )
         this_transactions = [txn for txn in this_transactions
-                             if Decimal(txn["amount"]) == this_amount]
+                             if txn["amount"] == this_amount]
         this_transactions.sort(key=lambda txn: txn["date"])
 
         other_transactions = self.other_budget.transactions_by_category_name(
             self.other_category_name
         )
         other_transactions = [txn for txn in other_transactions
-                              if Decimal(txn["amount"]) == -this_amount]
+                              if txn["amount"] == -this_amount]
         other_transactions.sort(key=lambda txn: txn["date"])
 
         missing_transactions = []
