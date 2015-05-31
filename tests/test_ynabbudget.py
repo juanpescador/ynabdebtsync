@@ -90,6 +90,10 @@ def test_calculate_category_total_returns_correct_amount():
     ynab_budget = ynabbudget.YnabBudget(budget_json)
     assert_equal(ynab_budget.calculate_category_total("Test Debt Category"), Decimal(-5))
 
+def test_calculate_category_total_decimal_amount_returns_correct_amount():
+    ynab_budget = ynabbudget.YnabBudget(this_budget_json)
+    assert_equal(ynab_budget.calculate_category_total("Tithing"), 242.73)
+
 # YnabComparer
 def test_categories_reconcile_if_category_totals_are_equal():
     budget_comparer = ynabbudget.YnabBudgetComparer(budget_json, "Test Debt Category", budget_json, "Test Debt Category")
