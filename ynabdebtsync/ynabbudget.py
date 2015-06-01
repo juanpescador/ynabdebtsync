@@ -108,6 +108,9 @@ class YnabBudgetMalformedError(Exception):
         self.inner_message = inner_message
         self.budget_json = budget_json
 
+class YnabBudgetComparerValueError(ValueError):
+    """Raise this when there are no missing transactions."""
+
 class YnabBudgetComparer:
     def __init__(self, this_budget_json, this_category_name, other_budget_json, other_category_name):
         self.this_budget = YnabBudget(this_budget_json)
@@ -316,7 +319,7 @@ class YnabBudgetComparer:
             superset_transactions = other_transactions
             subset_transactions = this_transactions
         elif len(this_transactions) == len(other_transactions):
-            raise ValueError("There are no missing transactions. Both budget categories contain the same number of transactions ({}) for this_amount = {} and other_amount = {}".format(len(this_transactions), this_amount, -this_amount))
+            raise YnabBudgetComparerValueError("There are no missing transactions. Both budget categories contain the same number of transactions ({}) for this_amount = {} and other_amount = {}".format(len(this_transactions), this_amount, -this_amount))
 
         # Sentinel to know when iteration has ended.
         done = object()
