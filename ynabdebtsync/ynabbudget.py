@@ -228,9 +228,10 @@ class YnabBudgetComparer:
         other_iter = iter(other_transactions)
         other_transaction = next(other_iter, done)
         if other_transaction is done:
-            # Other transactions was empty, it's missing all of this budget's
-            # transactions.
+            # Other transactions was empty, other_budget is missing all of this
+            # budget's transactions, and this_budget is not missing any.
             other_missing_transactions = this_transactions
+            return [], other_missing_transactions
 
         this_iter = iter(this_transactions)
         this_transaction = next(this_iter, done)
@@ -241,7 +242,7 @@ class YnabBudgetComparer:
         # of the smaller amount. The number of transactions missing is the
         # difference of transactions for that amount between the two
         # categories.
-        while this_transaction is not done:
+        while this_transaction is not done and other_transaction is not done:
             this_amount = this_transaction["amount"]
             other_amount = other_transaction["amount"]
             # When the amounts don't add up to zero, cancelling each other out,
@@ -271,6 +272,11 @@ class YnabBudgetComparer:
                 this_transaction = next(this_iter, done)
                 other_transaction = next(other_iter, done)
 
+        # If this_transactions hasn't reached the end, the remaining transactions
+        # are missing from other_transactions.
+        while this_transaction is not done:
+            other_missing_transactions.append(this_transaction)
+            this_transaction = next(this_iter, done)
         # If other_transactions hasn't reached the end, the remaining transactions
         # are missing from this_transactions.
         while other_transaction is not done:
