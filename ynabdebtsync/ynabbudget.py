@@ -203,8 +203,7 @@ class YnabBudgetComparer:
         this_transactions = self.this_budget.transactions_by_category_name(
             self.this_category_name
         )
-        this_transactions.sort(key=lambda transaction: transaction["amount"],
-                               reverse=True)
+        this_transactions.sort(key=lambda transaction: transaction["amount"])
 
         # other_transactions amounts are the inverse of this_transactions
         # amounts. Sort in reverse order so the indices of other_transactions
@@ -214,7 +213,8 @@ class YnabBudgetComparer:
         other_transactions = self.other_budget.transactions_by_category_name(
             self.other_category_name
         )
-        other_transactions.sort(key=lambda transaction: transaction["amount"])
+        other_transactions.sort(key=lambda transaction: transaction["amount"],
+                                reverse=True)
 
         this_missing_transactions = []
         other_missing_transactions = []
@@ -243,10 +243,10 @@ class YnabBudgetComparer:
             other_amount = other_transaction["amount"]
             # When the amounts don't add up to zero, cancelling each other out,
             # it means there is a discrepancy in transactions.
-            if this_amount + other_amount != 0:
+            if abs(this_amount) != abs(other_amount):
                 # this_transactions is missing one or more transactions of
                 # amount == -other_amount.
-                if abs(this_amount) <= abs(other_amount):
+                if abs(this_amount) > abs(other_amount):
                     missing_transactions = self._get_missing_transactions_of_amount(-other_amount)
                     this_missing_transactions.extend(missing_transactions)
                     # Bump other_transactions iterator past the missing transactions.
@@ -255,7 +255,7 @@ class YnabBudgetComparer:
 
                 # other_transactions is missing one or more transactions of
                 # amount == -other_amount.
-                elif abs(this_amount) > abs(other_amount):
+                elif abs(this_amount) < abs(other_amount):
                     missing_transactions = self._get_missing_transactions_of_amount(this_amount)
                     other_missing_transactions.extend(missing_transactions)
                     # Bump this_transactions iterator past missing transactions.
