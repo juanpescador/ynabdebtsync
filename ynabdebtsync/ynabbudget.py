@@ -245,26 +245,16 @@ class YnabBudgetComparer:
         while this_transaction is not done and other_transaction is not done:
             this_amount = this_transaction["amount"]
             other_amount = other_transaction["amount"]
-            # When the amounts don't add up to zero, cancelling each other out,
-            # it means there is a discrepancy in transactions.
-            if abs(this_amount) != abs(other_amount):
-                # this_transactions is missing one or more transactions of
-                # amount == -other_amount.
-                if abs(this_amount) > abs(other_amount):
-                    missing_transactions = self._get_other_budget_transactions_missing_from_this_budget(other_amount)
-                    this_missing_transactions.extend(missing_transactions)
-                    # Bump other_transactions iterator past the missing transactions.
-                    for transaction in missing_transactions:
-                        other_transaction = next(other_iter, done)
-
-                # other_transactions is missing one or more transactions of
-                # amount == -other_amount.
-                elif abs(this_amount) < abs(other_amount):
-                    missing_transactions = self._get_this_budget_transactions_missing_from_other_budget(this_amount)
-                    other_missing_transactions.extend(missing_transactions)
-                    # Bump this_transactions iterator past missing transactions.
-                    for transaction in missing_transactions:
-                        this_transaction = next(this_iter, done)
+            # When the amounts aren't the inverse of each other they don't
+            # cancel each other out, meaning there is a discrepancy in
+            # transactions.
+            if this_amount != -other_amount:
+                if (this_amount < 0 and other_amount > 0):
+                    if abs(this_amount) > abs(other_amount):
+                        missing_transactions = self._get_this_budget_transactions_missing_from_other_budget(this_amount)
+                        other_missing_transactions.extend(missing_transactions)
+                        for transaction in missing_transactions:
+                            this_transaction = next(this_iter, done)
 
             # Amounts cancel each other out, representing a matching inflow
             # and outflow. Check the next pair.
