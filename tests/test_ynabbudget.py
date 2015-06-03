@@ -220,5 +220,5 @@ def test_get_missing_transactions_this_negative_gt_other_positive_returns_this_t
 
     assert_equal(len(this_missing), 0)
     assert_equal(len(other_missing), 1)
-    assert_equal(other_missing[0]["amount"], 8)
-    assert_equal(other_missing[0]["memo"], "Borrow for nachos")
+    assert_equal(other_missing[0]["amount"], -10)
+    assert_equal(other_missing[0]["memo"], "Loan for tea")
