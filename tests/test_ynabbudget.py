@@ -118,52 +118,53 @@ def test_no_transactions_of_given_amount_throws_exception():
     with assert_raises(ValueError) as e:
         budget_comparer._get_missing_transactions_of_amount(3)
 
-def test_get_missing_transactions_returns_correct_transactions():
-    budget_comparer = ynabbudget.YnabBudgetComparer(this_budget_json, "Test Debt Category", other_budget_json, "Test Debt Category")
+#def test_get_missing_transactions_returns_correct_transactions():
+    #budget_comparer = ynabbudget.YnabBudgetComparer(this_budget_json, "Test Debt Category", other_budget_json, "Test Debt Category")
 
-    this_missing, other_missing = budget_comparer.get_missing_transactions()
+    #this_missing, other_missing = budget_comparer.get_missing_transactions()
 
-    assert_equal(len(this_missing), 1)
-    assert_equal(len(other_missing), 0)
-    assert_equal(this_missing[0]["memo"], "Loan for beer")
-    assert_equal(this_missing[0]["amount"], -5)
+    #assert_equal(len(this_missing), 1)
+    #assert_equal(len(other_missing), 0)
+    #assert_equal(this_missing[0]["memo"], "Loan for beer")
+    #assert_equal(this_missing[0]["amount"], -5)
 
-def test_get_missing_transactions_this_transactions_other_transactions_equal_length_doesnt_throw_exception():
-    budget_comparer = ynabbudget.YnabBudgetComparer(this_budget_json, "Test Debt Category", other_budget_json, "Test Debt Category")
+#def test_get_missing_transactions_this_transactions_other_transactions_equal_length_doesnt_throw_exception():
+    #budget_comparer = ynabbudget.YnabBudgetComparer(this_budget_json, "Test Debt Category", other_budget_json, "Test Debt Category")
 
-    this_transactions = [
-        {
-            u'cleared': u'Cleared',
-            u'entityVersion': u'A-118',
-            u'entityType': u'transaction',
-            u'memo': u'Loan for nachos',
-            u'amount': 10,
-            u'date': u'2015-04-28',
-            u'entityId': u'AD5F14BC-5BCC-E075-4B14-208676CA762F',
-            u'accepted': True,
-            u'payeeId': u'45C13591-718B-3025-0F3C-2086F37E7676',
-            u'categoryId': u'DEF375CA-58D2-D332-4C79-20862B7566F8',
-            u'accountId': u'37ADA60C- BE54-074E-F1B2-1FC8F2BE93CF'
-        }
-    ]
+    #this_transactions = [
+        #{
+            #u'cleared': u'Cleared',
+            #u'entityVersion': u'A-118',
+            #u'entityType': u'transaction',
+            #u'memo': u'Loan for nachos',
+            #u'amount': 10,
+            #u'date': u'2015-04-28',
+            #u'entityId': u'AD5F14BC-5BCC-E075-4B14-208676CA762F',
+            #u'accepted': True,
+            #u'payeeId': u'45C13591-718B-3025-0F3C-2086F37E7676',
+            #u'categoryId': u'DEF375CA-58D2-D332-4C79-20862B7566F8',
+            #u'accountId': u'37ADA60C- BE54-074E-F1B2-1FC8F2BE93CF'
+        #}
+    #]
 
-    other_transactions = [
-        {
-            u'cleared': u'Cleared',
-            u'entityVersion': u'A-118',
-            u'entityType': u'transaction',
-            u'memo': u'Borrow for nachos',
-            u'amount': 8,
-            u'date': u'2015-04-28',
-            u'entityId': u'AD5F14BC-5BCC-E075-4B14-208676CA762F',
-            u'accepted': True,
-            u'payeeId': u'45C13591-718B-3025-0F3C-2086F37E7676',
-            u'categoryId': u'DEF375CA-58D2-D332-4C79-20862B7566F8',
-            u'accountId': u'37ADA60C- BE54-074E-F1B2-1FC8F2BE93CF'
-        }
-    ]
-    this_missing, other_missing = budget_comparer.get_missing_transactions()
+    #other_transactions = [
+        #{
+            #u'cleared': u'Cleared',
+            #u'entityVersion': u'A-118',
+            #u'entityType': u'transaction',
+            #u'memo': u'Borrow for nachos',
+            #u'amount': 8,
+            #u'date': u'2015-04-28',
+            #u'entityId': u'AD5F14BC-5BCC-E075-4B14-208676CA762F',
+            #u'accepted': True,
+            #u'payeeId': u'45C13591-718B-3025-0F3C-2086F37E7676',
+            #u'categoryId': u'DEF375CA-58D2-D332-4C79-20862B7566F8',
+            #u'accountId': u'37ADA60C- BE54-074E-F1B2-1FC8F2BE93CF'
+        #}
+    #]
+    #this_missing, other_missing = budget_comparer.get_missing_transactions()
 
+# Implement this negative, other positive, abs(this) > abs(other)
 def test_get_missing_transactions_this_negative_gt_other_positive_returns_this_transaction():
     budget_comparer = ynabbudget.YnabBudgetComparer(this_budget_json, "Test Debt Category", other_budget_json, "Test Debt Category")
 
