@@ -256,6 +256,15 @@ class YnabBudgetComparer:
                         for transaction in missing_transactions:
                             this_transaction = next(this_iter, done)
 
+                    # Don't need to check for abs(this_amount) == abs(other_amount).
+                    # Due to this_amount being negative and other_amount positive, if
+                    # they are equal it means they are the inverse of each other.
+                    else:
+                        missing_transactions = self._get_other_budget_transactions_missing_from_this_budget(other_amount)
+                        this_missing_transactions.extend(missing_transactions)
+                        for transaction in missing_transactions:
+                            other_transaction = next(other_iter, done)
+
             # Amounts cancel each other out, representing a matching inflow
             # and outflow. Check the next pair.
             else:
