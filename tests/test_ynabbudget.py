@@ -290,7 +290,7 @@ def test_get_missing_transactions_this_negative_all_cases_other_negative_returns
             u'entityVersion': u'A-118',
             u'entityType': u'transaction',
             u'memo': u'Loan for water',
-            u'amount': -7,
+            u'amount': -11,
             u'date': u'2015-04-28',
             u'entityId': u'AD5F14BC-5BCC-E075-4B14-208676CA762F',
             u'accepted': True,
@@ -334,10 +334,24 @@ def test_get_missing_transactions_this_negative_all_cases_other_negative_returns
 
     this_missing, other_missing = budget_comparer.get_missing_transactions()
 
-    # this_missing gets the -3 transaction due to leftover transaction processing.
+    # abs(this_amount) > abs(other_amount)
+    assert_equal(len(this_missing), 0)
+    assert_equal(len(other_missing), 1)
+    assert_equal(other_missing[0]["amount"], -11)
+    assert_equal(other_missing[0]["memo"], "Loan for water")
+
+    # abs(this_amount) < abs(other_amount)
+    this_transactions[0]["amount"] = -7
     assert_equal(len(this_missing), 0)
     assert_equal(len(other_missing), 1)
     assert_equal(other_missing[0]["amount"], -7)
+    assert_equal(other_missing[0]["memo"], "Loan for water")
+
+    # abs(this_amount) == abs(other_amount)
+    this_transactions[0]["amount"] = -10
+    assert_equal(len(this_missing), 0)
+    assert_equal(len(other_missing), 1)
+    assert_equal(other_missing[0]["amount"], -10)
     assert_equal(other_missing[0]["memo"], "Loan for water")
 
 def test_get_missing_transactions_this_positive_all_cases_other_positive_returns_other_transaction():
