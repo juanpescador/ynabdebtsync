@@ -368,11 +368,7 @@ class YnabBudgetComparer:
             # The subset is empty and is missing all of superset's transactions.
             return superset_transactions
 
-        # superset_transactions is always longer than subset_transactions, and
-        # is always bumped in tandem with subset_transactions, so it's
-        # guaranteed that subset_transaction will be done before
-        # superset_transaction ever is.
-        while subset_transaction is not done:
+        while superset_transaction is not done and subset_transaction is not done:
             # Subset is missing the current superset transaction. Add it and
             # check the next superset_transaction.
             if superset_transaction["date"] != subset_transaction["date"]:
@@ -406,7 +402,15 @@ class YnabBudgetComparer:
             missing_transactions.append(superset_transaction)
             superset_transaction = next(superset_transactions_iter, done)
 
-        target_missing_transactions_len = len(superset_transactions) - len(subset_transactions)
+        # No need to append any extra subset_transactions, as we are only
+        # checking for superset transactions that are missing. We do need to
+        # know how many there are though, to know if we found the expected amount
+        # of missing transactions.
+        count_subset_transactions_not_in_superset = 0
+        while subset_transaction is not done:
+            count_subset_transactions_not_in_superset += 1
+
+        target_missing_transactions_len = len(superset_transactions) - (len(subset_transactions) - count_subset_transactions_not_in_superset)
 
         if len(missing_transactions) != target_missing_transactions_len:
             raise ValueError("Cannot reliably detect missing transactions. This can happen if existing transaction dates don't match between the budgets.")
