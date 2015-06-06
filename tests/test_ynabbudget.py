@@ -393,7 +393,24 @@ def test_get_missing_transactions_this_positive_all_cases_other_positive_returns
 
     this_missing, other_missing = budget_comparer.get_missing_transactions()
 
+    # abs(this_amount) > abs(other_amount)
     assert_equal(len(this_missing), 1)
     assert_equal(len(other_missing), 0)
     assert_equal(this_missing[0]["amount"], 7)
+    assert_equal(this_missing[0]["memo"], "Borrow for milk")
+
+    # abs(this_amount) < abs(other_amount)
+    other_transactions[0]["amount"] = 11
+
+    assert_equal(len(this_missing), 1)
+    assert_equal(len(other_missing), 0)
+    assert_equal(this_missing[0]["amount"], 11)
+    assert_equal(this_missing[0]["memo"], "Borrow for milk")
+
+    # abs(this_amount) == abs(other_amount)
+    other_transactions[0]["amount"] = 10
+
+    assert_equal(len(this_missing), 1)
+    assert_equal(len(other_missing), 0)
+    assert_equal(this_missing[0]["amount"], 10)
     assert_equal(this_missing[0]["memo"], "Borrow for milk")
