@@ -409,6 +409,7 @@ class YnabBudgetComparer:
         count_subset_transactions_not_in_superset = 0
         while subset_transaction is not done:
             count_subset_transactions_not_in_superset += 1
+            subset_transaction = next(subset_transactions_iter, done)
 
         target_missing_transactions_len = len(superset_transactions) - (len(subset_transactions) - count_subset_transactions_not_in_superset)
 
