@@ -277,6 +277,13 @@ class YnabBudgetComparer:
                     for transaction in missing_transactions:
                         other_transaction = next(other_iter, done)
 
+                elif (this_amount > 0 and other_amount < 0):
+                    if abs(this_amount) > abs(other_amount):
+                        missing_transactions = self._get_other_budget_transactions_missing_from_this_budget(other_amount)
+                        this_missing_transactions.extend(missing_transactions)
+                        for transaction in missing_transactions:
+                            other_transaction = next(other_iter, done)
+
 
             # Amounts cancel each other out, representing a matching inflow
             # and outflow. Check the next pair.
