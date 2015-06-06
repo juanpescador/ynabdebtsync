@@ -283,6 +283,11 @@ class YnabBudgetComparer:
                         this_missing_transactions.extend(missing_transactions)
                         for transaction in missing_transactions:
                             other_transaction = next(other_iter, done)
+                    else:
+                        missing_transactions = self._get_this_budget_transactions_missing_from_other_budget(this_amount)
+                        other_missing_transactions.extend(missing_transactions)
+                        for transaction in missing_transactions:
+                            this_transaction = next(this_iter, done)
 
 
             # Amounts cancel each other out, representing a matching inflow
