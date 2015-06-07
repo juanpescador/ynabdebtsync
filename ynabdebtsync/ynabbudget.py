@@ -253,10 +253,7 @@ class YnabBudgetComparer:
                     if abs(this_amount) > abs(other_amount):
                         missing_transactions = self._get_this_budget_transactions_missing_from_other_budget(this_amount)
                         other_missing_transactions.extend(missing_transactions)
-                        # Advance to the next group of transactions. Advancing len(missing_transactions)
-                        # times is incorrect, as the starting transaction may not be the first
-                        # in the group of transactions for that amount, so we'd advance too far.
-                        while this_transaction["amount"] == this_amount:
+                        for transaction in missing_transactions:
                             this_transaction = next(this_iter, done)
 
                     # Don't need to check for abs(this_amount) == abs(other_amount).
@@ -265,31 +262,31 @@ class YnabBudgetComparer:
                     else:
                         missing_transactions = self._get_other_budget_transactions_missing_from_this_budget(other_amount)
                         this_missing_transactions.extend(missing_transactions)
-                        while other_transaction["amount"] == other_amount:
+                        for transaction in missing_transactions:
                             other_transaction = next(other_iter, done)
 
                 elif (this_amount < 0 and other_amount < 0):
                     missing_transactions = self._get_this_budget_transactions_missing_from_other_budget(this_amount)
                     other_missing_transactions.extend(missing_transactions)
-                    while this_transaction["amount"] == this_amount:
+                    for transaction in missing_transactions:
                         this_transaction = next(this_iter, done)
 
                 elif (this_amount > 0 and other_amount > 0):
                     missing_transactions = self._get_other_budget_transactions_missing_from_this_budget(other_amount)
                     this_missing_transactions.extend(missing_transactions)
-                    while other_transaction["amount"] == other_amount:
+                    for transaction in missing_transactions:
                         other_transaction = next(other_iter, done)
 
                 elif (this_amount > 0 and other_amount < 0):
                     if abs(this_amount) > abs(other_amount):
                         missing_transactions = self._get_other_budget_transactions_missing_from_this_budget(other_amount)
                         this_missing_transactions.extend(missing_transactions)
-                        while other_transaction["amount"] == other_amount:
+                        for transaction in missing_transactions:
                             other_transaction = next(other_iter, done)
                     else:
                         missing_transactions = self._get_this_budget_transactions_missing_from_other_budget(this_amount)
                         other_missing_transactions.extend(missing_transactions)
-                        while this_transaction["amount"] == this_amount:
+                        for transaction in missing_transactions:
                             this_transaction = next(this_iter, done)
 
 
