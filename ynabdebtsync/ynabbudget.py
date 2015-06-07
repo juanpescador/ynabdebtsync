@@ -354,6 +354,8 @@ class YnabBudgetComparer:
         elif len(this_transactions) == len(other_transactions):
             raise YnabBudgetComparerValueError("There are no missing transactions. Both budget categories contain the same number of transactions ({}) for this_amount = {} and other_amount = {}".format(len(this_transactions), this_amount, -this_amount))
 
+        missing_transactions_target_count = len(superset_transactions) - len(subset_transactions)
+
         # Sentinel to know when iteration has ended.
         done = object()
 
@@ -371,7 +373,9 @@ class YnabBudgetComparer:
             # The subset is empty and is missing all of superset's transactions.
             return superset_transactions
 
-        while superset_transaction is not done and subset_transaction is not done:
+        while (superset_transaction is not done
+               and subset_transaction is not done
+               and len(missing_transactions) < missing_transactions_target_count):
             # Subset is missing the current superset transaction. Add it and
             # check the next superset_transaction.
             if superset_transaction["date"] != subset_transaction["date"]:
@@ -399,25 +403,15 @@ class YnabBudgetComparer:
         ):
             superset_transaction = next(superset_transactions, done)
 
-        # If any superset_transactions are left, add them to
-        # missing_transactions.
-        while superset_transaction is not done:
+        # Only add enough superset_transactions to pad missing_transactions
+        # to the right amount. Dates between super and subset mismatch, so
+        # the missing transactions returned aren't the best quality, but serve
+        # to reconcile the budgets.
+        # TODO raise an error so the caller can decide how to resolve the issue.
+        while (superset_transaction is not done
+               and len(missing_transactions) < missing_transactions_target_count):
             missing_transactions.append(superset_transaction)
             superset_transaction = next(superset_transactions_iter, done)
-
-        # No need to append any extra subset_transactions, as we are only
-        # checking for superset transactions that are missing. We do need to
-        # know how many there are though, to know if we found the expected amount
-        # of missing transactions.
-        count_subset_transactions_not_in_superset = 0
-        while subset_transaction is not done:
-            count_subset_transactions_not_in_superset += 1
-            subset_transaction = next(subset_transactions_iter, done)
-
-        target_missing_transactions_len = len(superset_transactions) - (len(subset_transactions) - count_subset_transactions_not_in_superset)
-
-        if len(missing_transactions) != target_missing_transactions_len:
-            raise ValueError("Cannot reliably detect missing transactions. This can happen if existing transaction dates don't match between the budgets.")
 
         return missing_transactions
 
