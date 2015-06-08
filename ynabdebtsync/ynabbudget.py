@@ -141,52 +141,59 @@ class YnabBudgetComparer:
         zero, it means that one, or both, of the categories is missing one, or
         more, transactions.
 
-        Due to the ascending order of this_transactions, if the comparison is:
-            abs(this_transactions[n]) > abs(other_transactions[n])
-        then this_transactions is the one missing transaction(s) from
-        other_transactions:
+        There are four main cases when the transactions don't match, based on
+        the signs of this_amount and other_amount:
+            A. this_amount < 0, other_amount > 0
+            B. this_amount < 0, other_amount < 0
+            C. this_amount > 0, other_amount > 0
+            D. this_amount > 0, other_amount < 0
+
+        Cases A and D have a further two cases each:
+            1. abs(this_amount) > abs(other_amount)
+            2. abs(this_amount) < abs(other_amount)
+
+        The third case, abs(this_amount) == abs(other_amount) is impossible, as
+        the opposing signs mean that, if the absolute values are equal, the actual
+        values cancel each other out. E.g. this_amount = -3, other_amount = 3
+            abs(-3) == abs(3)
+        but
+            -3 + 3 == 0
+        so the transactions cancel each other out.
+
+        Cases B and C don't distinguish between the absolute values of their
+        transactions: the missing transaction is always from the same budget.
+        For case B, the missing transaction is always the one from this_budget.
+        For case C, the missing transaction is always the one from
+        other_budget.
+
+        An example of case A follows, which should be enough to construct the
+        rest of cases.
+
+        this_amount = -10
+        other_amount = 8
+        abs(this_amount) > abs(other_amount)
 
             this_transactions                       other_transactions
             amount  memo                            amount  memo
-            $-5     loan money for nachos           $5      borrow money for nachos
-         -> $10     borrow money for sandwich    -> $-5     loan money for beer
-                                                    $-10    loan money for sandwich
-
-        As seen here, this_transactions[1] amount is $10, while it is $-5
-        for other_transactions[1]. other_transactions contains an outflow
-        transaction of $-5 but there isn't a matching inflow transaction of $5
-        in this_transactions. This is the simplest case: there could be more
-        than one inflow transaction of amount $5 missing from this_transactions.
-
-        If the comparison is:
-            abs(this_transactions[n]) < abs(other_transactions[n])
-        then other_transactions is the one missing transaction(s) from
-        this_transactions:
-
-            this_transactions                       other_transactions
-            amount  memo                            amount  memo
-         -> $-3     loan money for water         -> $-5     loan money for beer
-            $5      borrow money for beer           $-10    loan money for sandwich
+         -> $-10    loan money for nachos        -> $8      loan money for beer
+            $8      borrow money for beer           $-10    loan money for sandwich
             $10     borrow money for sandwich
 
-        As seen here, this_transactions[0] amount is $-3, while
-        other_transactions[0] is $-5. If we didn't compare the absolute values
-        of the amounts, we would incorrectly choose the $-5 transaction as the
-        missing one, but we can see it is actually in this_transactions.
+        In this case, the two transactions marked with a -> don't cancel each
+        other out. To cancel each other out, other_transactions needs a
+        transaction of amount $10. Because other_transactions is in descending
+        order, if it existed, that transaction would be above the $8
+        transaction, so we know for certain that the missing transaction out of
+        the pair [$-10, $8] is the one from this_budget, i.e. the $-10
+        transaction (which, when added to other_budget would become a $10 to
+        cancel out the amounts).
 
-        If the comparison is:
-            abs(this_transactions[n]) == abs(other_transactions[n])
-        then both categories are missing transactions from each other:
+        We don't know anything about the $8 dollar transaction from
+        other_transactions yet, the algorithm only considers one pair of
+        transactions at a time. In this example, the additional transactions
+        have been included to give context.
 
-            this_transactions                       other_transactions
-            amount  memo                            amount  memo
-         -> $-3     loan money for water         -> $-3     loan money for juice
-            $5      borrow money for beer           $-10    loan money for sandwich
-            $10     borrow money for sandwich
-
-        In this case, other_transactions is missing a $3 transaction, borrowing
-        money for water, and this_transactions is missing a $3 transaction,
-        borrowing money for juice.
+        The rest of cases can be derived in a similar fashion.
 
         Once a divergence in amounts is identified, transactions of the
         identified amount are compared to the other category's transactions of
