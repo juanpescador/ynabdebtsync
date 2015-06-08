@@ -588,7 +588,7 @@ def test_get_missing_transactions_this_positive_lt_other_negative_returns_this_t
     assert_equal(other_missing[0]["amount"], 7)
     assert_equal(other_missing[0]["memo"], "Borrow for wine")
 
-def test_get_missing_transactions_when_differing_number_transactions_of_same_amount_with_mismatched_dates_advances_correct_number_of_transactions():
+def test_get_missing_transactions_when_number_of_transactions_of_same_amount_differ_and_dates_mismatched_advances_correct_number_of_transactions():
     budget_comparer = ynabbudget.YnabBudgetComparer(this_budget_json, "Test Debt Category", other_budget_json, "Test Debt Category")
 
     this_transactions = [
