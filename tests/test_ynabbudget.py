@@ -70,6 +70,41 @@ def test_transactions_by_category_name_existing_category_returns_all_transaction
 
     assert_equal(len(transactions), 3)
 
+def test_transactions_by_category_name_subtransactions_without_memo_inherit_parent_memo():
+    ynab_budget = ynabbudget.YnabBudget(budget_json)
+
+    subtransaction_without_memo = [
+        {
+            u'cleared': u'Cleared',
+            u'entityVersion': u'A-118',
+            u'entityType': u'transaction',
+            u'memo': u'Loan for nachos',
+            u'amount': 10,
+            u'date': u'2015-04-28',
+            u'entityId': u'AD5F14BC-5BCC-E075-4B14-208676CA762F',
+            u'accepted': True,
+            u'payeeId': u'45C13591-718B-3025-0F3C-2086F37E7676',
+            u'categoryId': u'DEF375CA-58D2-D332-4C79-20862B7566F8',
+            u'accountId': u'37ADA60C- BE54-074E-F1B2-1FC8F2BE93CF',
+			u'subTransactions': [
+				{
+					u'entityId': u'8BB2E729-90D7-47B0-91B4-D291156582DB',
+					u'entityType': u'subTransaction',
+					u'categoryId': u'DEF375CA-58D2-D332-4C79-20862B7566F8',
+					u'entityVersion': u'D-328',
+					u'amount': -5.75,
+					u'parentTransactionId': u'AD5F14BC-5BCC-E075-4B14-208676CA762F'
+				}
+			]
+        }
+    ]
+
+    ynab_budget.data["transactions"] = subtransaction_without_memo
+
+    transactions = ynab_budget.transactions_by_category_name("Test Debt Category")
+
+    assert_equal(transactions[0]["memo"], transactions[1]["memo"])
+
 def test_transactions_by_category_name_no_transactions_returns_empty_list():
     ynab_budget = ynabbudget.YnabBudget(budget_json)
 

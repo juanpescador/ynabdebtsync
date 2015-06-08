@@ -80,7 +80,7 @@ class YnabBudget:
                 for subtransaction in transaction["subTransactions"]:
                     subtransaction["date"] = transaction["date"]
                     # If the subtransaction already has a memo leave it as is.
-                    if "memo" not in subtransaction:
+                    if "memo" not in subtransaction and "memo" in transaction:
                         subtransaction["memo"] = transaction["memo"]
                 transactions_to_add.extend(
                     self._transactions_from_category_id(
