@@ -138,7 +138,7 @@ class YnabBudgetComparer:
     def categories_are_reconciled(self):
         return abs(self.this_budget.calculate_category_total(self.this_category_name)) == abs(self.other_budget.calculate_category_total(self.other_category_name))
 
-    def get_missing_transactions(self):
+    def get_missing_transactions(self, start_date=None):
         """Gets the transactions missing from each budget.
 
         To identify which transactions are missing, both transactions lists are
@@ -227,19 +227,32 @@ class YnabBudgetComparer:
         of missing transactions is deemed important, while the memo (what it
         was for) is a nice-have.
         """
-        this_transactions = self.this_budget.transactions_by_category_name(
-            self.this_category_name
-        )
-        this_transactions.sort(key=lambda transaction: transaction["amount"])
+        this_transactions = []
+        other_transactions = []
 
+        if start_date is not None:
+            this_transactions = self.this_budget.filter_category_transactions_by_date(
+                self.this_category_name,
+                start_date
+            )
+            other_transactions = self.other_budget.filter_category_transactions_by_date(
+                self.other_category_name,
+                start_date
+            )
+        else:
+            this_transactions = self.this_budget.transactions_by_category_name(
+                self.this_category_name
+            )
+            other_transactions = self.other_budget.transactions_by_category_name(
+                self.other_category_name
+            )
+
+        this_transactions.sort(key=lambda transaction: transaction["amount"])
         # other_transactions amounts are the inverse of this_transactions
         # amounts. Sort in reverse order so the indices of other_transactions
         # match the inverse transaction of this_transactions.
         # E.g. this_transactions = Joe's transactions = $-5, $+2, $+7
         #    other_transactions = Jane's transactions = $+5, $-2, $-7
-        other_transactions = self.other_budget.transactions_by_category_name(
-            self.other_category_name
-        )
         other_transactions.sort(key=lambda transaction: transaction["amount"],
                                 reverse=True)
 
