@@ -129,6 +129,56 @@ def test_calculate_category_total_decimal_amount_returns_correct_amount():
     ynab_budget = ynabbudget.YnabBudget(this_budget_json)
     assert_equal(ynab_budget.calculate_category_total("Tithing"), 242.73)
 
+def test_transactions_by_category_name_filtered_by_date_returns_transactions_of_that_date():
+    ynab_budget = ynabbudget.YnabBudget(this_budget_json)
+
+    transactions = [
+        {
+            u'cleared': u'Cleared',
+            u'entityVersion': u'A-118',
+            u'entityType': u'transaction',
+            u'memo': u'Loan for nachos',
+            u'amount': 10,
+            u'date': u'2015-04-28',
+            u'entityId': u'AD5F14BC-5BCC-E075-4B14-208676CA762F',
+            u'accepted': True,
+            u'payeeId': u'45C13591-718B-3025-0F3C-2086F37E7676',
+            u'categoryId': u'DEF375CA-58D2-D332-4C79-20862B7566F8',
+            u'accountId': u'37ADA60C- BE54-074E-F1B2-1FC8F2BE93CF'
+        },
+        {
+            u'cleared': u'Cleared',
+            u'entityVersion': u'A-118',
+            u'entityType': u'transaction',
+            u'memo': u'Loan for nachos',
+            u'amount': 10,
+            u'date': u'2015-03-28',
+            u'entityId': u'AD5F14BC-5BCC-E075-4B14-208676CA762F',
+            u'accepted': True,
+            u'payeeId': u'45C13591-718B-3025-0F3C-2086F37E7676',
+            u'categoryId': u'DEF375CA-58D2-D332-4C79-20862B7566F8',
+            u'accountId': u'37ADA60C- BE54-074E-F1B2-1FC8F2BE93CF'
+        }
+    ]
+
+    ynab_budget.data["transactions"] = transactions
+
+    march_2015_transactions = ynab_budget.filter_category_transactions_by_date('test debt category', '2015-03')
+    assert_equal(len(march_2015_transactions), 1)
+    assert_equal(march_2015_transactions[0]["date"], "2015-03-28")
+
+    twentyfifteen_transactions = ynab_budget.filter_category_transactions_by_date('test debt category', '2015')
+    assert_equal(len(twentyfifteen_transactions), 2)
+    assert_equal(twentyfifteen_transactions[0]["date"], "2015-04-28")
+    assert_equal(twentyfifteen_transactions[1]["date"], "2015-03-28")
+
+    march_28_2015_transactions = ynab_budget.filter_category_transactions_by_date('test debt category', '2015-03-28')
+    assert_equal(len(march_28_2015_transactions), 1)
+    assert_equal(march_28_2015_transactions[0]["date"], "2015-03-28")
+
+    november_2013_transactions = ynab_budget.filter_category_transactions_by_date('test debt category', '2013-11')
+    assert_equal(len(november_2013_transactions), 0)
+
 # YnabComparer
 def test_categories_reconcile_if_category_totals_are_equal():
     budget_comparer = ynabbudget.YnabBudgetComparer(budget_json, "Test Debt Category", budget_json, "Test Debt Category")

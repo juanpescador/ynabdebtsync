@@ -1,6 +1,7 @@
 # -*- coding: utf8 -*-
 
 import json
+import re
 
 class YnabBudget:
     """YNAB budget reading."""
@@ -51,7 +52,7 @@ class YnabBudget:
         """
         category_id = self.category_id_from_name(name)
 
-        return self._transactions_from_category_id(category_id, filters)
+        return self._transactions_from_category_id(category_id, filters=filters)
 
     def _transactions_from_category_id(self,
                                         category_id,
@@ -70,7 +71,10 @@ class YnabBudget:
 
         for transaction in transactions_to_check:
             if transaction["categoryId"] == category_id:
-                transactions_to_add.append(transaction)
+                if filters is None:
+                    transactions_to_add.append(transaction)
+                elif all([filter_(transaction) for filter_ in filters]):
+                    transactions_to_add.append(transaction)
             # Recursive case, check subtransactions. Extend transactions_to_add
             # with the list of subtransactions assigned to the given category,
             # if any.
@@ -93,6 +97,16 @@ class YnabBudget:
         # Turn into a generator so the results from this method can be iterated
         # over, allowing filtering by e.g. date in log(N) vs log(2N) time
         return transactions_to_add
+
+    def filter_category_transactions_by_date(self, category_name, date):
+        """Retrieves transactions from a category that match a given date string, in
+        yyyy[-mm[-dd]] format. The month and day are optional, so it is possible to
+        filter by year; year and month; or year, month and date."""
+        filters = []
+        date_filter = lambda txn: re.match(date, txn["date"]) is not None
+        filters.append(date_filter)
+
+        return self.transactions_by_category_name(category_name, filters)
 
     def calculate_category_total(self, category_name):
         transactions = self.transactions_by_category_name(category_name)
