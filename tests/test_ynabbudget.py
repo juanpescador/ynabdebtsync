@@ -837,10 +837,85 @@ def test_get_missing_transactions_with_start_date_returns_transactions_from_star
     budget_comparer.this_budget.data["transactions"] = this_transactions
     budget_comparer.other_budget.data["transactions"] = other_transactions
 
-    this_missing, other_missing = budget_comparer.get_missing_transactions("2015-05")
+    budget_comparer.set_start_date("2015-05")
+    this_missing, other_missing = budget_comparer.get_missing_transactions()
 
     assert_equal(len(this_missing), 0)
     assert_equal(len(other_missing), 1)
     assert_equal(other_missing[0]["date"], "2015-05-28")
     assert_equal(other_missing[0]["amount"], 7)
     assert_equal(other_missing[0]["memo"], "Borrow for wine")
+
+def test_get_missing_transactions_with_start_date_ignores_past_transactions():
+    budget_comparer = ynabbudget.YnabBudgetComparer(this_budget_json, "Test Debt Category", other_budget_json, "Test Debt Category")
+
+    this_transactions = [
+        {
+            u'cleared': u'Cleared',
+            u'entityVersion': u'A-118',
+            u'entityType': u'transaction',
+            u'memo': u'Loan for wine',
+            u'amount': -1.5,
+            u'date': u'2015-04-28',
+            u'entityId': u'AD5F14BC-5BCC-E075-4B14-208676CA762F',
+            u'accepted': True,
+            u'payeeId': u'45C13591-718B-3025-0F3C-2086F37E7676',
+            u'categoryId': u'DEF375CA-58D2-D332-4C79-20862B7566F8',
+            u'accountId': u'37ADA60C- BE54-074E-F1B2-1FC8F2BE93CF'
+        },
+        {
+            u'cleared': u'Cleared',
+            u'entityVersion': u'A-118',
+            u'entityType': u'transaction',
+            u'memo': u'Loan for wine',
+            u'amount': -1.5,
+            u'date': u'2015-05-28',
+            u'entityId': u'AD5F14BC-5BCC-E075-4B14-208676CA762F',
+            u'accepted': True,
+            u'payeeId': u'45C13591-718B-3025-0F3C-2086F37E7676',
+            u'categoryId': u'DEF375CA-58D2-D332-4C79-20862B7566F8',
+            u'accountId': u'37ADA60C- BE54-074E-F1B2-1FC8F2BE93CF'
+        },
+        {
+            u'cleared': u'Cleared',
+            u'entityVersion': u'A-118',
+            u'entityType': u'transaction',
+            u'memo': u'Loan for crisps',
+            u'amount': 1.65,
+            u'date': u'2015-05-28',
+            u'entityId': u'AD5F14BC-5BCC-E075-4B14-208676CA762F',
+            u'accepted': True,
+            u'payeeId': u'45C13591-718B-3025-0F3C-2086F37E7676',
+            u'categoryId': u'DEF375CA-58D2-D332-4C79-20862B7566F8',
+            u'accountId': u'37ADA60C- BE54-074E-F1B2-1FC8F2BE93CF'
+        }
+    ]
+
+    other_transactions = [
+        {
+            u'cleared': u'Cleared',
+            u'entityVersion': u'A-118',
+            u'entityType': u'transaction',
+            u'memo': u'Loan for crisps',
+            u'amount': -1.65,
+            u'date': u'2015-05-28',
+            u'entityId': u'AD5F14BC-5BCC-E075-4B14-208676CA762F',
+            u'accepted': True,
+            u'payeeId': u'45C13591-718B-3025-0F3C-2086F37E7676',
+            u'categoryId': u'DEF375CA-58D2-D332-4C79-20862B7566F8',
+            u'accountId': u'37ADA60C- BE54-074E-F1B2-1FC8F2BE93CF'
+        }
+    ]
+
+
+    budget_comparer.this_budget.data["transactions"] = this_transactions
+    budget_comparer.other_budget.data["transactions"] = other_transactions
+
+    budget_comparer.set_start_date("2015-05")
+    this_missing, other_missing = budget_comparer.get_missing_transactions()
+
+    assert_equal(len(this_missing), 0)
+    assert_equal(len(other_missing), 1)
+    assert_equal(other_missing[0]["date"], "2015-05-28")
+    assert_equal(other_missing[0]["amount"], -1.5)
+    assert_equal(other_missing[0]["memo"], "Loan for wine")
