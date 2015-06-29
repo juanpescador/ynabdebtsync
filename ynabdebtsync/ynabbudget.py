@@ -134,11 +134,15 @@ class YnabBudgetComparer:
         self.this_category_name = this_category_name
         self.other_budget = YnabBudget(other_budget_json)
         self.other_category_name = other_category_name
+        self.start_date = None
+
+    def set_start_date(self, start_date):
+        self.start_date = start_date
 
     def categories_are_reconciled(self):
         return abs(self.this_budget.calculate_category_total(self.this_category_name)) == abs(self.other_budget.calculate_category_total(self.other_category_name))
 
-    def get_missing_transactions(self, start_date=None):
+    def get_missing_transactions(self):
         """Gets the transactions missing from each budget.
 
         To identify which transactions are missing, both transactions lists are
@@ -230,14 +234,14 @@ class YnabBudgetComparer:
         this_transactions = []
         other_transactions = []
 
-        if start_date is not None:
+        if self.start_date is not None:
             this_transactions = self.this_budget.filter_category_transactions_by_date(
                 self.this_category_name,
-                start_date
+                self.start_date
             )
             other_transactions = self.other_budget.filter_category_transactions_by_date(
                 self.other_category_name,
-                start_date
+                self.start_date
             )
         else:
             this_transactions = self.this_budget.transactions_by_category_name(
@@ -361,16 +365,27 @@ class YnabBudgetComparer:
         list with more transactions, those that are missing from the list that
         has less transactions."""
 
-        this_transactions = self.this_budget.transactions_by_category_name(
-            self.this_category_name
-        )
+        if self.start_date is not None:
+            this_transactions = self.this_budget.filter_category_transactions_by_date(
+                self.this_category_name,
+                self.start_date
+            )
+            other_transactions = self.other_budget.filter_category_transactions_by_date(
+                self.other_category_name,
+                self.start_date
+            )
+        else:
+            this_transactions = self.this_budget.transactions_by_category_name(
+                self.this_category_name
+            )
+            other_transactions = self.other_budget.transactions_by_category_name(
+                self.other_category_name
+            )
+
         this_transactions = [txn for txn in this_transactions
                              if txn["amount"] == this_amount]
         this_transactions.sort(key=lambda txn: txn["date"])
 
-        other_transactions = self.other_budget.transactions_by_category_name(
-            self.other_category_name
-        )
         other_transactions = [txn for txn in other_transactions
                               if txn["amount"] == -this_amount]
         other_transactions.sort(key=lambda txn: txn["date"])
