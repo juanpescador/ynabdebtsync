@@ -1,11 +1,11 @@
 # -*- coding: utf8 -*-
 
-from flask import Flask, request
+from . import flask_app
+from flask import request
 from flask_restful import Resource, Api
 from ynabbudget import YnabBudgetComparer
 
-app = Flask(__name__)
-api = Api(app)
+api = Api(flask_app)
 
 class CategoryComparison(Resource):
     def post(self):
@@ -20,6 +20,7 @@ class CategoryComparison(Resource):
 
         comparer = YnabBudgetComparer(this_json, this_target_category, other_json, other_target_category)
         comparer.set_start_date(start_date)
+
         missing_txns = comparer.get_missing_transactions()
         return {"this_missing": missing_txns[0], "other_missing": missing_txns[1]}
 

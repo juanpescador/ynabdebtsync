@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %} Compare budgets {% endblock %}
+{% block head %}
+    {{ super() }}
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.3/angular.js"></script>
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+{% endblock %}
+{% block content %}
+<div data-ng-app="ynabDebtSync" data-ng-controller="budgetComparer">
+    [[greeting.text]] world!
+</div>
+{% endblock %}
