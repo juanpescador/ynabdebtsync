@@ -9,8 +9,8 @@ ynabDebtSync.controller('budgetUploadCtrl', ['$scope', 'budgetComparerService', 
 
         var missingTransactions = budgetComparerService.compare(formData)
             .then(function(response) {
-                $scope.thisMissingTransactions = missingTransactions.this_missing;
-                $scope.otherMissingTransactions = missingTransactions.other_missing;
+                $scope.thisMissingTransactions = response.data.this_missing;
+                $scope.otherMissingTransactions = response.data.other_missing;
             });
     };
 }]);
