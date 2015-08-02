@@ -1,14 +1,20 @@
 # -*- coding: utf8 -*-
 
+import werkzeug
+
 from . import flask_app
 from flask import request
-from flask_restful import Resource, Api
+from flask_restful import Resource, Api, reqparse
 from ynabbudget import YnabBudgetComparer
 
 api = Api(flask_app)
 
 class CategoryComparison(Resource):
     def post(self):
+        parser = reqparse.RequestParser()
+        parser.add_argument('this_budget', required=True, type=werkzeug.datastructures.FileStorage, location='files')
+        args = parser.parse_args()
+
         this_file = request.files["this_budget"]
         this_json = this_file.read().replace("\n", "")
         this_target_category = request.form["this_target_category"]

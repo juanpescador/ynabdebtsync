@@ -4,9 +4,35 @@
     {{ super() }}
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.3/angular.js"></script>
     <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/services/budgetComparerService.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/controllers/budgetUploadCtrl.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/directives/fileVariable.directive.js') }}"></script>
 {% endblock %}
 {% block content %}
-<div data-ng-app="ynabDebtSync" data-ng-controller="budgetComparer">
-    [[greeting.text]] world!
+<div data-ng-app="ynabDebtSync">
+    <div data-ng-controller="budgetUploadCtrl">
+        <form>
+            <fieldset>
+                <legend>Your budget</legend>
+                File: <input type="file" data-file-variable="thisBudget" /><br />
+                Target category name: <input type="text" data-ng-model="thisTargetCategory" /><br />
+            </fieldset>
+
+            <fieldset>
+                <legend>Their budget</legend>
+                File: <input type="file" data-file-variable="otherBudget" /><br />
+                Target category name: <input type="text" data-ng-model="otherTargetCategory" /><br />
+            </fieldset>
+            Start date: <input type="text" data-ng-model="startDate" />
+
+            <button type="button" data-ng-click="compareBudgets()">Get missing transactions</button>
+        </form>
+        <div>You are missing these transactions:
+            [[thisMissingTransactions | json]]
+        </div>
+        <div>They are missing these transactions:
+            [[otherMissingTransactions | json]]
+        </div>
+    </div>
 </div>
 {% endblock %}
