@@ -70,7 +70,9 @@ class YnabBudget:
             transactions_to_check = self.data["transactions"]
 
         for transaction in transactions_to_check:
-            if transaction["categoryId"] == category_id:
+            if (transaction["categoryId"] == category_id and
+                    ("isTombstone" not in transaction or
+                        transaction["isTombstone"] == False)):
                 if filters is None:
                     transactions_to_add.append(transaction)
                 elif all([filter_(transaction) for filter_ in filters]):
