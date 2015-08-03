@@ -2,6 +2,8 @@
 {% block title %} Compare budgets {% endblock %}
 {% block head %}
     {{ super() }}
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/semantic.css') }}">
+    <script src="{{ url_for('static', filename='css/semantic.js') }}"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.3/angular.js"></script>
     <script src="{{ url_for('static', filename='js/app.js') }}"></script>
     <script src="{{ url_for('static', filename='js/services/budgetComparerService.js') }}"></script>
@@ -11,7 +13,7 @@
 {% block content %}
 <div data-ng-app="ynabDebtSync">
     <div data-ng-controller="budgetUploadCtrl">
-        <form>
+        <form class="ui input">
             <fieldset>
                 <legend>Your budget</legend>
                 File: <input type="file" data-file-variable="thisBudget" /><br />
@@ -25,7 +27,7 @@
             </fieldset>
             Start date: <input type="text" data-ng-model="startDate" />
 
-            <button type="button" data-ng-click="compareBudgets()">Get missing transactions</button>
+            <button class="ui button" type="button" data-ng-click="compareBudgets()">Get missing transactions</button>
         </form>
         <div data-ng-show="comparisonAttempted">
             <div data-ng-show="thisMissingTransactions.length > 0">You are missing these transactions:
