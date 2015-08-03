@@ -27,11 +27,23 @@
 
             <button type="button" data-ng-click="compareBudgets()">Get missing transactions</button>
         </form>
-        <div>You are missing these transactions:
-            [[thisMissingTransactions | json]]
-        </div>
-        <div>They are missing these transactions:
-            [[otherMissingTransactions | json]]
+        <div data-ng-show="comparisonAttempted">
+            <div data-ng-show="thisMissingTransactions.length > 0">You are missing these transactions:
+                <ul>
+                    <li data-ng-repeat="txn in thisMissingTransactions">[[txn.date]] — [[txn.memo]] — [[txn.amount]]
+                </ul>
+            </div>
+            <div data-ng-hide="thisMissingTransactions.length > 0">
+                <p>You are not missing any transactions.</p>
+            </div>
+            <div data-ng-show="otherMissingTransactions.length > 0">They are missing these transactions:
+                <ul>
+                    <li data-ng-repeat="txn in otherMissingTransactions">[[txn.date]] — [[txn.memo]] — [[txn.amount]]
+                </ul>
+            </div>
+            <div data-ng-hide="otherMissingTransactions.length > 0">
+                <p>They are not missing any transactions.</p>
+            </div>
         </div>
     </div>
 </div>
