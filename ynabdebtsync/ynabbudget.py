@@ -71,6 +71,7 @@ class YnabBudget:
 
         for transaction in transactions_to_check:
             if (transaction["categoryId"] == category_id and
+                    # isTombstone == True means the transaction has been deleted.
                     ("isTombstone" not in transaction or
                         transaction["isTombstone"] == False)):
                 if filters is None:

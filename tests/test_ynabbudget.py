@@ -179,6 +179,122 @@ def test_transactions_by_category_name_filtered_by_date_returns_transactions_of_
     november_2013_transactions = ynab_budget.filter_category_transactions_by_date('test debt category', '2013-11')
     assert_equal(len(november_2013_transactions), 0)
 
+def test_transactions_by_category_name_non_deleted_transaction_returns_transaction():
+    ynab_budget = ynabbudget.YnabBudget(this_budget_json)
+
+    transactions = [
+        {
+            u'cleared': u'Cleared',
+            u'entityVersion': u'A-118',
+            u'entityType': u'transaction',
+            u'memo': u'Loan for nachos',
+            u'amount': 10,
+            u'date': u'2015-04-28',
+            u'entityId': u'AD5F14BC-5BCC-E075-4B14-208676CA762F',
+            u'accepted': True,
+            u'payeeId': u'45C13591-718B-3025-0F3C-2086F37E7676',
+            u'categoryId': u'DEF375CA-58D2-D332-4C79-20862B7566F8',
+            u'accountId': u'37ADA60C- BE54-074E-F1B2-1FC8F2BE93CF'
+        }
+    ]
+
+    ynab_budget.data["transactions"] = transactions
+
+    transactions = ynab_budget.transactions_by_category_name('test debt category')
+    assert_equal(len(transactions), 1)
+
+def test_transactions_by_category_name_undone_deleted_transaction_returns_transaction():
+    """This case shouldn't appear, testing with a real budget revealed deleting
+    a transaction and then undoing the delete resulted in the isTombstone
+    property being removed from the transaction. Take it into account in case
+    there is an edge case where isTombstone is kept and set to false."""
+    ynab_budget = ynabbudget.YnabBudget(this_budget_json)
+
+    transactions = [
+        {
+            u'cleared': u'Cleared',
+            u'entityVersion': u'A-118',
+            u'entityType': u'transaction',
+            u'isTombstone': False,
+            u'memo': u'Loan for nachos',
+            u'amount': 10,
+            u'date': u'2015-04-28',
+            u'entityId': u'AD5F14BC-5BCC-E075-4B14-208676CA762F',
+            u'accepted': True,
+            u'payeeId': u'45C13591-718B-3025-0F3C-2086F37E7676',
+            u'categoryId': u'DEF375CA-58D2-D332-4C79-20862B7566F8',
+            u'accountId': u'37ADA60C- BE54-074E-F1B2-1FC8F2BE93CF'
+        }
+    ]
+
+    ynab_budget.data["transactions"] = transactions
+
+    transactions = ynab_budget.transactions_by_category_name('test debt category')
+    assert_equal(len(transactions), 1)
+
+def test_transactions_by_category_name_deleted_transaction_returns_no_transactions():
+    ynab_budget = ynabbudget.YnabBudget(this_budget_json)
+
+    transactions = [
+        {
+            u'cleared': u'Cleared',
+            u'entityVersion': u'A-118',
+            u'entityType': u'transaction',
+            u'isTombstone': True,
+            u'memo': u'Loan for nachos',
+            u'amount': 10,
+            u'date': u'2015-04-28',
+            u'entityId': u'AD5F14BC-5BCC-E075-4B14-208676CA762F',
+            u'accepted': True,
+            u'payeeId': u'45C13591-718B-3025-0F3C-2086F37E7676',
+            u'categoryId': u'DEF375CA-58D2-D332-4C79-20862B7566F8',
+            u'accountId': u'37ADA60C- BE54-074E-F1B2-1FC8F2BE93CF'
+        }
+    ]
+
+    ynab_budget.data["transactions"] = transactions
+
+    transactions = ynab_budget.transactions_by_category_name('test debt category')
+    assert_equal(len(transactions), 0)
+
+def test_transactions_by_category_name_mixed_deleted_and_non_deleted_transaction_returns_non_deleted_transactions():
+    ynab_budget = ynabbudget.YnabBudget(this_budget_json)
+
+    transactions = [
+        {
+            u'cleared': u'Cleared',
+            u'entityVersion': u'A-118',
+            u'entityType': u'transaction',
+            u'isTombstone': True,
+            u'memo': u'Loan for nachos',
+            u'amount': 10,
+            u'date': u'2015-04-28',
+            u'entityId': u'AD5F14BC-5BCC-E075-4B14-208676CA762F',
+            u'accepted': True,
+            u'payeeId': u'45C13591-718B-3025-0F3C-2086F37E7676',
+            u'categoryId': u'DEF375CA-58D2-D332-4C79-20862B7566F8',
+            u'accountId': u'37ADA60C- BE54-074E-F1B2-1FC8F2BE93CF'
+        },
+        {
+            u'cleared': u'Cleared',
+            u'entityVersion': u'A-118',
+            u'entityType': u'transaction',
+            u'memo': u'Loan for nachos',
+            u'amount': 10,
+            u'date': u'2015-04-28',
+            u'entityId': u'AD5F14BC-5BCC-E075-4B14-208676CA762F',
+            u'accepted': True,
+            u'payeeId': u'45C13591-718B-3025-0F3C-2086F37E7676',
+            u'categoryId': u'DEF375CA-58D2-D332-4C79-20862B7566F8',
+            u'accountId': u'37ADA60C- BE54-074E-F1B2-1FC8F2BE93CF'
+        }
+    ]
+
+    ynab_budget.data["transactions"] = transactions
+
+    transactions = ynab_budget.transactions_by_category_name('test debt category')
+    assert_equal(len(transactions), 1)
+
 # YnabComparer
 def test_categories_reconcile_if_category_totals_are_equal():
     budget_comparer = ynabbudget.YnabBudgetComparer(budget_json, "Test Debt Category", budget_json, "Test Debt Category")
