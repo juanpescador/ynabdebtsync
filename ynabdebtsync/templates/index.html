@@ -9,6 +9,7 @@
     <script src="{{ url_for('static', filename='js/services/budgetComparerService.js') }}"></script>
     <script src="{{ url_for('static', filename='js/controllers/budgetUploadCtrl.js') }}"></script>
     <script src="{{ url_for('static', filename='js/directives/fileVariable.directive.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/directives/buttonStatus.directive.js') }}"></script>
 {% endblock %}
 {% block content %}
 <div style="padding: 2em" data-ng-app="ynabDebtSync">
@@ -51,7 +52,7 @@
                         <input type="text" placeholder="Comparison start date" data-ng-model="startDate" />
                     </div>
                     <br />
-                    <button class="ui button primary" type="button" data-ng-click="compareBudgets()">Compare budgets</button>
+                    <button class="ui button primary" type="button" data-ng-click="compareBudgets()" data-button-status>Compare budgets</button>
                 </div>
             </form>
         </div>
