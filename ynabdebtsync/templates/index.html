@@ -11,40 +11,70 @@
     <script src="{{ url_for('static', filename='js/directives/fileVariable.directive.js') }}"></script>
 {% endblock %}
 {% block content %}
-<div data-ng-app="ynabDebtSync">
+<div style="padding: 2em" data-ng-app="ynabDebtSync">
     <div data-ng-controller="budgetUploadCtrl">
-        <form class="ui input">
-            <fieldset>
-                <legend>Your budget</legend>
-                File: <input type="file" data-file-variable="thisBudget" /><br />
-                Target category name: <input type="text" data-ng-model="thisTargetCategory" /><br />
-            </fieldset>
+        <div class="ui stackable two column grid">
+            <form class="form row">
+                <div class="column">
+                    <div class="fields">
+                        <div class="ui header"><i class="user icon"></i>
+                            <div class="content">Your budget</div>
+                        </div>
+                        <label for="thisBudget" class="ui icon button">
+                            <i class="file icon"></i>
+                            Choose file
+                        </label>
+                        <input type="file" id="thisBudget" style="display: none" data-file-variable="thisBudget" />
+                        <div class="ui input">
+                            <input type="text" placeholder="Target category name" data-ng-model="thisTargetCategory" />
+                        </div>
+                    </div>
+                </div>
 
-            <fieldset>
-                <legend>Their budget</legend>
-                File: <input type="file" data-file-variable="otherBudget" /><br />
-                Target category name: <input type="text" data-ng-model="otherTargetCategory" /><br />
-            </fieldset>
-            Start date: <input type="text" data-ng-model="startDate" />
-
-            <button class="ui button" type="button" data-ng-click="compareBudgets()">Get missing transactions</button>
-        </form>
-        <div data-ng-show="comparisonAttempted">
-            <div data-ng-show="thisMissingTransactions.length > 0">You are missing these transactions:
-                <ul>
-                    <li data-ng-repeat="txn in thisMissingTransactions">[[txn.date]] — [[txn.memo]] — [[txn.amount]]
-                </ul>
+                <div class="column">
+                    <div class="fields">
+                        <div class="ui header"><i class="users icon"></i>
+                            <div class="content">Their budget</div>
+                        </div>
+                        <label for="otherBudget" class="ui icon button">
+                            <i class="file icon"></i>
+                            Choose file
+                        </label>
+                        <input type="file" id="otherBudget" style="display: none" data-file-variable="otherBudget" />
+                        <div class="ui input">
+                            <input type="text" placeholder="Target category name" data-ng-model="otherTargetCategory" />
+                        </div>
+                    </div>
+                </div>
+                <div class="column">
+                    <div class="ui input">
+                        <input type="text" placeholder="Comparison start date" data-ng-model="startDate" />
+                    </div>
+                    <br />
+                    <button class="ui button primary" type="button" data-ng-click="compareBudgets()">Compare budgets</button>
+                </div>
+            </form>
+        </div>
+        <div class="ui stackable two column grid" data-ng-show="comparisonAttempted">
+            <div class="column">
+                <div data-ng-show="thisMissingTransactions.length > 0">You are missing these transactions:
+                    <ul>
+                        <li data-ng-repeat="txn in thisMissingTransactions">[[txn.date]] — [[txn.memo]] — [[txn.amount]]
+                    </ul>
+                </div>
+                <div data-ng-hide="thisMissingTransactions.length > 0">
+                    <p>You are not missing any transactions.</p>
+                </div>
             </div>
-            <div data-ng-hide="thisMissingTransactions.length > 0">
-                <p>You are not missing any transactions.</p>
-            </div>
-            <div data-ng-show="otherMissingTransactions.length > 0">They are missing these transactions:
-                <ul>
-                    <li data-ng-repeat="txn in otherMissingTransactions">[[txn.date]] — [[txn.memo]] — [[txn.amount]]
-                </ul>
-            </div>
-            <div data-ng-hide="otherMissingTransactions.length > 0">
-                <p>They are not missing any transactions.</p>
+            <div class="column">
+                <div data-ng-show="otherMissingTransactions.length > 0">They are missing these transactions:
+                    <ul>
+                        <li data-ng-repeat="txn in otherMissingTransactions">[[txn.date]] — [[txn.memo]] — [[txn.amount]]
+                    </ul>
+                </div>
+                <div data-ng-hide="otherMissingTransactions.length > 0">
+                    <p>They are not missing any transactions.</p>
+                </div>
             </div>
         </div>
     </div>
