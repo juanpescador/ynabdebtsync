@@ -10,6 +10,7 @@
     <script src="{{ url_for('static', filename='js/controllers/budgetUploadCtrl.js') }}"></script>
     <script src="{{ url_for('static', filename='js/directives/fileVariable.directive.js') }}"></script>
     <script src="{{ url_for('static', filename='js/directives/buttonStatus.directive.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/directives/missingTransactionList.directive.js') }}"></script>
 {% endblock %}
 {% block content %}
 <div style="padding: 2em" data-ng-app="ynabDebtSync">
@@ -58,56 +59,10 @@
         </div>
         <div class="ui stackable two column grid" data-ng-show="comparisonAttempted">
             <div class="column">
-                <div data-ng-show="thisMissingTransactions.length > 0">You are missing these transactions:
-                    <table class="ui three column table">
-                      <thead>
-                        <tr><th>Date</th>
-                        <th>Memo</th>
-                        <th>Amount</th>
-                      </tr></thead>
-                      <tbody>
-                        <tr data-ng-repeat="txn in thisMissingTransactions">
-                          <td>[[txn.date]]</td>
-                          <td>[[txn.memo]]</td>
-                          <td>[[txn.amount]]</td>
-                        </tr>
-                      </tbody>
-                      <tfoot>
-                        <tr><th>[[thisMissingTransactions.length]] missing transactions</th>
-                        <th></th>
-                        <th></th>
-                      </tr></tfoot>
-                    </table>
-                </div>
-                <div data-ng-hide="thisMissingTransactions.length > 0">
-                    <p>You are not missing any transactions.</p>
-                </div>
+                <missing-transaction-list data-missing-transactions="thisMissingTransactions" />
             </div>
             <div class="column">
-                <div data-ng-show="otherMissingTransactions.length > 0">They are missing these transactions:
-                    <table class="ui three column table">
-                      <thead>
-                        <tr><th>Date</th>
-                        <th>Memo</th>
-                        <th>Amount</th>
-                      </tr></thead>
-                      <tbody>
-                        <tr data-ng-repeat="txn in otherMissingTransactions">
-                          <td>[[txn.date]]</td>
-                          <td>[[txn.memo]]</td>
-                          <td>[[txn.amount]]</td>
-                        </tr>
-                      </tbody>
-                      <tfoot>
-                        <tr><th>[[otherMissingTransactions.length]] missing transactions</th>
-                        <th></th>
-                        <th></th>
-                      </tr></tfoot>
-                    </table>
-                </div>
-                <div data-ng-hide="otherMissingTransactions.length > 0">
-                    <p>They are not missing any transactions.</p>
-                </div>
+                <missing-transaction-list data-missing-transactions="otherMissingTransactions" />
             </div>
         </div>
     </div>
