@@ -7,7 +7,8 @@
     "test": "tests"
   },
   "scripts": {
-    "test": "nosetests"
+    "test": "nosetests",
+    "postinstall": "cd semantic && gulp build"
   },
   "repository": {
     "type": "git",
