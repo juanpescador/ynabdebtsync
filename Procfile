@@ -1,1 +1,1 @@
-web: gunicorn ynabdebtsync.app.api:flask_app --log-file=-
+web: gunicorn ynabdebtsync.app:api.flask_app --log-file=-
