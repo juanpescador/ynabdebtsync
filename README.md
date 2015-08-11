@@ -1,6 +1,6 @@
 # YNAB Debt Sync ##
 
-YNAB Debt Sync lets you quickly reconcile your shared debt category with another
+[YNAB Debt Sync] lets you quickly reconcile your shared debt category with another
 person. If you track the money you lend to someone with YNAB and they do the
 same, this web application automates the process of finding which transactions
 are missing from each other’s budget so the totals tally up.
@@ -42,8 +42,15 @@ From the virtualenv with all dependencies installed:
 
 Then visit http://127.0.0.1:5000 in a browser.
 
+## Deploying to Heroku
+
+Read the [HerokuSetup document].
+
 ## Running the tests ##
 
 From the project’s root, execute
 
     $ nosetests
+
+[YNAB Debt Sync]: https://ynabdebtsync.herokuapp.com
+[HerokuSetup document]: ./docs/HerokuSetup.md
