@@ -9,15 +9,38 @@ are missing from each other’s budget so the totals tally up.
 
 ## Dependencies ##
 
-Install the dependencies in a virtualenv:
+* Python 2.7.9
+* Node.js v0.10.26
+* Semantic UI v2.0.7
+
+## Build
+
+Install the Python dependencies in a virtualenv:
 
     $ pip install -r requirements.txt
+
+Install the Node.js dependencies:
+
+    $ npm install
+
+Semantic UI is installed via npm, but may fail on the first attempt, during
+`gulp install`. If so, execute `npm install` again.
+
+After successfully installing the Node.js dependencies, execute `gulp build`
+from the semantic directory:
+
+    $ cd semantic
+    $ gulp build
+
+The CSS and JavaScript files will be created under `ynabdebtsync/static/css`.
 
 ## Running the development server
 
 From the virtualenv with all dependencies installed:
 
     $ python run.py
+
+Then visit http://127.0.0.1:5000 in a browser.
 
 ## Running the tests ##
 
