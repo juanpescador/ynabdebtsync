@@ -1,5 +1,5 @@
 {
-  "base": "semantic\\",
+  "base": "semantic/",
   "paths": {
     "source": {
       "config": "src/theme.config",
@@ -8,10 +8,10 @@
       "themes": "src/themes/"
     },
     "output": {
-      "packaged": "..\\ynabdebtsync\\static\\css\\",
-      "uncompressed": "..\\ynabdebtsync\\static\\css\\components\\",
-      "compressed": "..\\ynabdebtsync\\static\\css\\components\\",
-      "themes": "..\\ynabdebtsync\\static\\css\\themes\\"
+      "packaged": "../ynabdebtsync/static/css/",
+      "uncompressed": "../ynabdebtsync/static/css/components/",
+      "compressed": "../ynabdebtsync/static/css/components/",
+      "themes": "../ynabdebtsync/static/css/themes/"
     },
     "clean": "dist/"
   },
