@@ -1,10 +1,16 @@
 <div data-ng-show="missingTransactions.length > 0">
     <h2 class="ui header">
-        <div class="content">Missing transactions
-        <div class="sub header">Add these transactions to the budget. Note the
-            memo is from the other budget, it's what the other person wrote.</div>
+        <div class="content">
+            Missing transactions
+            <div class="sub header">
+                These are the transactions you need to add to this budget. If a
+                transaction shows the green Inflow label you need to create an
+                inflow transaction. Conversely, if the red Outflow label is
+                shown you need to create an outflow transaction.
+            </div>
+        </div>
     </h2>
-    <table class="ui three column table">
+    <table class="ui table">
       <thead>
           <tr><th>Type</th>
               <th>Date</th>
@@ -13,19 +19,17 @@
       </tr></thead>
       <tbody>
         <tr data-ng-repeat="txn in missingTransactions">
-          <td data-ng-show="txn.amount < 0">
-            <div class="ui green label">
+          <td>
+            <div class="ui center green label" data-ng-show="txn.amount < 0">
               <i class="plus icon"></i> Inflow
             </div>
-          </td>
-          <td data-ng-hide="txn.amount < 0">
-            <div class="ui red label">
-              <i class="plus icon"></i> Outflow
+            <div class="ui center red label" data-ng-hide="txn.amount < 0">
+              <i class="minus icon"></i> Outflow
             </div>
           </td>
-          <td>[[txn.date]]</td>
+          <td><nobr>[[txn.date]]</nobr></td>
           <td>[[txn.memo]]</td>
-          <td>[[-txn.amount]]</td>
+          <td>[[txn.amount > 0 ? txn.amount : -txn.amount]]</td>
         </tr>
       </tbody>
       <tfoot>

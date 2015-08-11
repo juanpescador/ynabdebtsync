@@ -16,7 +16,7 @@
 <div style="padding: 2em" data-ng-app="ynabDebtSync">
     <div data-ng-controller="budgetUploadCtrl">
         <div class="ui stackable two column grid">
-            <form class="form row">
+            <form class="form row" data-ng-submit="compareBudgets()">
                 <div class="column">
                     <div class="fields">
                         <h1 class="ui header"><i class="user icon"></i>
@@ -53,7 +53,7 @@
                         <input type="text" placeholder="Comparison start date" data-ng-model="startDate" />
                     </div>
                     <br />
-                    <button class="ui button primary" type="button" data-ng-click="compareBudgets()" data-button-status>Compare budgets</button>
+                    <button class="ui button primary" data-button-status>Compare budgets</button>
                 </div>
             </form>
         </div>
