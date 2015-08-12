@@ -1,6 +1,7 @@
 ynabDebtSync.controller('budgetUploadCtrl', ['$scope', 'budgetComparerService', function($scope, budgetComparerService){
     $scope.comparisonAttempted = false;
     $scope.comparisonExecuting = false;
+    $scope.comparisonErrors = [];
 
     $scope.compareBudgets = function() {
         $scope.comparisonExecuting = true;
@@ -18,6 +19,9 @@ ynabDebtSync.controller('budgetUploadCtrl', ['$scope', 'budgetComparerService', 
                 $scope.otherMissingTransactions = response.data.other_missing;
                 $scope.comparisonAttempted = true;
                 $scope.comparisonExecuting = false;
+            }, function(response){
+                $scope.comparisonExecuting = false;
+                $scope.comparisonErrors.push(response);
             });
     };
 }]);

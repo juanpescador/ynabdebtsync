@@ -55,6 +55,15 @@
                     </div>
                     <br />
                     <button class="ui button primary" data-button-status>Compare budgets</button>
+                    <div class="ui error message" data-ng-show="comparisonErrors.length > 0">
+                        <i class="close icon" data-ng-click="comparisonErrors = []"></i>
+                        <div class="header">
+                          There has been an error comparing budgets
+                        </div>
+                        <ul class="list" data-ng-repeat="error in comparisonErrors">
+                          <li>[[error.statusText]] (Error [[error.status]])</li>
+                        </ul>
+                    </div>
                 </div>
             </form>
         </div>
