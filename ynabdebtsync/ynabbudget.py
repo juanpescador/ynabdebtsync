@@ -3,7 +3,7 @@
 import json
 import re
 
-class YnabBudget:
+class YnabBudget(object):
     """YNAB budget reading."""
     def __init__(self, budget_json):
         """budget_json is the Budget.yfull file's contents."""
@@ -131,7 +131,7 @@ class YnabBudgetMalformedError(Exception):
 class YnabBudgetComparerValueError(ValueError):
     """Raise this when there are no missing transactions."""
 
-class YnabBudgetComparer:
+class YnabBudgetComparer(object):
     def __init__(self, this_budget_json, this_category_name, other_budget_json, other_category_name):
         self.this_budget = YnabBudget(this_budget_json)
         self.this_category_name = this_category_name
