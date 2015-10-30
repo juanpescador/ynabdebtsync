@@ -16,12 +16,21 @@ ynabDebtSync.controller('budgetUploadCtrl', ['$scope', 'budgetComparerService', 
         var missingTransactions = budgetComparerService.compare(formData)
             .then(function(response) {
                 $scope.thisMissingTransactions = response.data.this_missing;
+                $scope.thisMissingTransactions.sort($scope.sortTransactionsByDateAsc);
+
                 $scope.otherMissingTransactions = response.data.other_missing;
+                $scope.otherMissingTransactions.sort($scope.sortTransactionsByDateAsc);
+
                 $scope.comparisonAttempted = true;
                 $scope.comparisonExecuting = false;
             }, function(response){
                 $scope.comparisonExecuting = false;
                 $scope.comparisonErrors.push(response);
             });
+
     };
+
+    $scope.sortTransactionsByDateAsc = function(a, b) {
+        return new Date(a.date).getTime() - new Date(b.date).getTime();
+    }
 }]);
