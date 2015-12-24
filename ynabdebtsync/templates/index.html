@@ -7,6 +7,7 @@
     <script src="{{ url_for('static', filename='css/semantic.js') }}"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.3/angular.js"></script>
     <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/app.config.js') }}"></script>
     <script src="{{ url_for('static', filename='js/services/budgetComparerService.js') }}"></script>
     <script src="{{ url_for('static', filename='js/controllers/budgetUploadCtrl.js') }}"></script>
     <script src="{{ url_for('static', filename='js/directives/fileVariable.directive.js') }}"></script>
@@ -15,8 +16,8 @@
 {% endblock %}
 {% block content %}
 <div>Hello, your token is {{ session['dropbox_token'] }}
-<div style="padding: 2em" data-ng-app="ynabDebtSync">
-    <div data-ng-controller="budgetUploadCtrl">
+<div style="padding: 2em" data-ng-app="app">
+    <div data-ng-controller="BudgetUploadController">
         <div class="ui stackable two column grid">
             <form class="form row" data-ng-submit="compareBudgets()">
                 <div class="column">

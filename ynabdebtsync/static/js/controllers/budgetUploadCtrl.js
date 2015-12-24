@@ -1,36 +1,46 @@
-ynabDebtSync.controller('budgetUploadCtrl', ['$scope', 'budgetComparerService', function($scope, budgetComparerService){
-    $scope.comparisonAttempted = false;
-    $scope.comparisonExecuting = false;
-    $scope.comparisonErrors = [];
+(function() {
+    'use strict';
 
-    $scope.compareBudgets = function() {
-        $scope.comparisonExecuting = true;
+    angular
+        .module('app')
+        .controller('BudgetUploadController', BudgetUploadController);
 
-        var formData = new FormData();
-        formData.append('this_budget', $scope.thisBudget);
-        formData.append('this_target_category', $scope.thisTargetCategory);
-        formData.append('other_budget', $scope.otherBudget);
-        formData.append('other_target_category', $scope.otherTargetCategory);
-        formData.append('start_date', $scope.startDate);
+    BudgetUploadController.$inject = ['$scope', 'budgetComparerService'];
 
-        var missingTransactions = budgetComparerService.compare(formData)
-            .then(function(response) {
-                $scope.thisMissingTransactions = response.data.this_missing;
-                $scope.thisMissingTransactions.sort($scope.sortTransactionsByDateAsc);
+    function BudgetUploadController($scope, budgetComparerService) {
+        $scope.comparisonAttempted = false;
+        $scope.comparisonExecuting = false;
+        $scope.comparisonErrors = [];
 
-                $scope.otherMissingTransactions = response.data.other_missing;
-                $scope.otherMissingTransactions.sort($scope.sortTransactionsByDateAsc);
+        $scope.compareBudgets = function() {
+            $scope.comparisonExecuting = true;
 
-                $scope.comparisonAttempted = true;
-                $scope.comparisonExecuting = false;
-            }, function(response){
-                $scope.comparisonExecuting = false;
-                $scope.comparisonErrors.push(response);
-            });
+            var formData = new FormData();
+            formData.append('this_budget', $scope.thisBudget);
+            formData.append('this_target_category', $scope.thisTargetCategory);
+            formData.append('other_budget', $scope.otherBudget);
+            formData.append('other_target_category', $scope.otherTargetCategory);
+            formData.append('start_date', $scope.startDate);
 
-    };
+            var missingTransactions = budgetComparerService.compare(formData)
+                .then(function(response) {
+                    $scope.thisMissingTransactions = response.data.this_missing;
+                    $scope.thisMissingTransactions.sort($scope.sortTransactionsByDateAsc);
 
-    $scope.sortTransactionsByDateAsc = function(a, b) {
-        return new Date(a.date).getTime() - new Date(b.date).getTime();
+                    $scope.otherMissingTransactions = response.data.other_missing;
+                    $scope.otherMissingTransactions.sort($scope.sortTransactionsByDateAsc);
+
+                    $scope.comparisonAttempted = true;
+                    $scope.comparisonExecuting = false;
+                }, function(response){
+                    $scope.comparisonExecuting = false;
+                    $scope.comparisonErrors.push(response);
+                });
+
+        };
+
+        $scope.sortTransactionsByDateAsc = function(a, b) {
+            return new Date(a.date).getTime() - new Date(b.date).getTime();
+        }
     }
-}]);
+})();

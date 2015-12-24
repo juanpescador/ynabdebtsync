@@ -1,5 +1,6 @@
-var ynabDebtSync = angular.module('ynabDebtSync', []);
-ynabDebtSync.config(['$interpolateProvider', function($interpolateProvider) {
-    $interpolateProvider.startSymbol('[[');
-    $interpolateProvider.endSymbol(']]');
-}]);
+(function() {
+    'use strict';
+
+    angular
+        .module('app', []);
+})();
