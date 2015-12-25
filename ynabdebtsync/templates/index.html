@@ -15,7 +15,7 @@
     <script src="{{ url_for('static', filename='js/dropbox/dropboxservice.js') }}"></script>
     <script src="{{ url_for('static', filename='js/localbudgets/localbudgets.module.js') }}"></script>
     <script src="{{ url_for('static', filename='js/localbudgets/localbudgets.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/directives/fileVariable.directive.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/localbudgets/fileProperty.directive.js') }}"></script>
     <script src="{{ url_for('static', filename='js/directives/buttonStatus.directive.js') }}"></script>
     <script src="{{ url_for('static', filename='js/directives/missingTransactionList.directive.js') }}"></script>
 {% endblock %}
@@ -34,7 +34,7 @@
                             <i class="file icon"></i>
                             Choose file
                         </label>
-                        <input type="file" id="thisBudget" style="display: none" data-file-variable="vm.thisBudget" />
+                        <input type="file" id="thisBudget" style="display: none" data-file-property="vm.thisBudget" />
                         <div class="ui input">
                             <input type="text" placeholder="Target category name" data-ng-model="vm.thisTargetCategory" />
                         </div>
@@ -50,7 +50,7 @@
                             <i class="file icon"></i>
                             Choose file
                         </label>
-                        <input type="file" id="otherBudget" style="display: none" data-file-variable="vm.otherBudget" />
+                        <input type="file" id="otherBudget" style="display: none" data-file-property="vm.otherBudget" />
                         <div class="ui input">
                             <input type="text" placeholder="Target category name" data-ng-model="vm.otherTargetCategory" />
                         </div>
