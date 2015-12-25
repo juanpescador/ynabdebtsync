@@ -6,6 +6,7 @@ from . import flask_app
 from flask import request
 from flask_restful import Resource, Api, reqparse
 from ynabbudget import YnabBudgetComparer
+from dropbox import Dropbox
 
 api = Api(flask_app)
 
@@ -33,5 +34,17 @@ class CategoryComparison(Resource):
     def get(self):
         return {"key": "value"}
 
+class DropboxBudgets(Resource):
+    def get(self, whose):
+        token = 'atoken'
+        db = Dropbox(token)
+
+        if whose == 'mine':
+            budgets = db.get_own_budgets()
+        elif whose == 'theirs':
+            budgets = db.get_their_budgets()
+        return budgets
+
 api.add_resource(CategoryComparison, "/api/categorycomparison")
+api.add_resource(DropboxBudgets, "/api/dropboxbudgets/<string:whose>")
 

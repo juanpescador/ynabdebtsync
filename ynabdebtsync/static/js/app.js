@@ -1,6 +1,12 @@
 (function() {
     'use strict';
 
-    angular
-        .module('app', []);
+    angular.module('app', [
+            'app.core',
+
+            /*
+             * Feature areas.
+             */
+            'app.dropbox'
+        ]);
 })();

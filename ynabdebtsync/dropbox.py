@@ -28,10 +28,22 @@ class Dropbox(object):
         self.session.headers.update({'Authorization': 'Bearer ' + self.token,
                                      'Content-Type': 'application/json'})
 
-    def get_all_budgets(self):
+    def get_own_budgets(self):
+        return self.get_all_budgets_at_path('/YNAB')
+
+    def get_their_budgets(self):
+        """Assumes shared budgets are available through a shared folder at the
+        root named 'YNAB (1)'. The '(1)' is because the own user's 'YNAB'
+        folder already exists, so when accepting a folder share from another
+        person, Dropbox will append '(1)' to avoid a name clash. This limits
+        comparisons to one other person's budget(s), as when a second person
+        shares their budget(s), it will appear as 'YNAB (2)'."""
+        return self.get_all_budgets_at_path('/YNAB (1)')
+
+    def get_all_budgets_at_path(self, path):
         url = self.dropbox_endpoints['list_folder']
         data = {
-            'path': '/YNAB',
+            'path': path,
             'recursive': False,
             'include_media_info': False,
             'include_deleted': False
