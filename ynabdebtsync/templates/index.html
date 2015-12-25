@@ -22,9 +22,9 @@
 {% block content %}
 <div>Hello, your token is {{ session['dropbox_token'] }}
 <div style="padding: 2em" data-ng-app="app">
-    <div data-ng-controller="LocalBudgets">
+    <div data-ng-controller="LocalBudgets as vm">
         <div class="ui stackable two column grid">
-            <form class="form row" data-ng-submit="compareBudgets()">
+            <form class="form row" data-ng-submit="vm.compareBudgets()">
                 <div class="column">
                     <div class="fields">
                         <h1 class="ui header"><i class="user icon"></i>
@@ -34,9 +34,9 @@
                             <i class="file icon"></i>
                             Choose file
                         </label>
-                        <input type="file" id="thisBudget" style="display: none" data-file-variable="thisBudget" />
+                        <input type="file" id="thisBudget" style="display: none" data-file-variable="vm.thisBudget" />
                         <div class="ui input">
-                            <input type="text" placeholder="Target category name" data-ng-model="thisTargetCategory" />
+                            <input type="text" placeholder="Target category name" data-ng-model="vm.thisTargetCategory" />
                         </div>
                     </div>
                 </div>
@@ -50,24 +50,24 @@
                             <i class="file icon"></i>
                             Choose file
                         </label>
-                        <input type="file" id="otherBudget" style="display: none" data-file-variable="otherBudget" />
+                        <input type="file" id="otherBudget" style="display: none" data-file-variable="vm.otherBudget" />
                         <div class="ui input">
-                            <input type="text" placeholder="Target category name" data-ng-model="otherTargetCategory" />
+                            <input type="text" placeholder="Target category name" data-ng-model="vm.otherTargetCategory" />
                         </div>
                     </div>
                 </div>
                 <div class="column">
                     <div class="ui input">
-                        <input type="text" placeholder="Comparison start date" data-ng-model="startDate" />
+                        <input type="text" placeholder="Comparison start date" data-ng-model="vm.startDate" />
                     </div>
                     <br />
                     <button class="ui button primary" data-button-status>Compare budgets</button>
-                    <div class="ui error message" data-ng-show="comparisonErrors.length > 0">
-                        <i class="close icon" data-ng-click="comparisonErrors = []"></i>
+                    <div class="ui error message" data-ng-show="vm.comparisonErrors.length > 0">
+                        <i class="close icon" data-ng-click="vm.comparisonErrors = []"></i>
                         <div class="header">
                           There has been an error comparing budgets
                         </div>
-                        <ul class="list" data-ng-repeat="error in comparisonErrors">
+                        <ul class="list" data-ng-repeat="error in vm.comparisonErrors">
                           <li>[[error.statusText]] (Error [[error.status]])
                               <br>[[error.data.message]]</li>
                         </ul>
@@ -75,12 +75,12 @@
                 </div>
             </form>
         </div>
-        <div class="ui stackable two column grid" data-ng-show="comparisonAttempted">
+        <div class="ui stackable two column grid" data-ng-show="vm.comparisonAttempted">
             <div class="column">
-                <missing-transaction-list data-missing-transactions="thisMissingTransactions" />
+                <missing-transaction-list data-missing-transactions="vm.thisMissingTransactions" />
             </div>
             <div class="column">
-                <missing-transaction-list data-missing-transactions="otherMissingTransactions" />
+                <missing-transaction-list data-missing-transactions="vm.otherMissingTransactions" />
             </div>
         </div>
     </div>

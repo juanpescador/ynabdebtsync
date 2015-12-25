@@ -5,41 +5,45 @@
         .module('app.localbudgets')
         .controller('LocalBudgets', LocalBudgets);
 
-    LocalBudgets.$inject = ['$scope', 'budgetComparerService'];
+    LocalBudgets.$inject = ['budgetComparerService'];
 
-    function LocalBudgets($scope, budgetComparerService) {
-        $scope.comparisonAttempted = false;
-        $scope.comparisonExecuting = false;
-        $scope.comparisonErrors = [];
+    function LocalBudgets(budgetComparerService) {
+        var vm = this;
 
-        $scope.compareBudgets = function() {
-            $scope.comparisonExecuting = true;
+        vm.compareBudgets = compareBudgets;
+        vm.comparisonAttempted = false;
+        vm.comparisonExecuting = false;
+        vm.comparisonErrors = [];
+        vm.sortTransactionsByDateAsc = sortTransactionsByDateAsc;
+
+        function compareBudgets() {
+            vm.comparisonExecuting = true;
 
             var formData = new FormData();
-            formData.append('this_budget', $scope.thisBudget);
-            formData.append('this_target_category', $scope.thisTargetCategory);
-            formData.append('other_budget', $scope.otherBudget);
-            formData.append('other_target_category', $scope.otherTargetCategory);
-            formData.append('start_date', $scope.startDate);
+            formData.append('this_budget', vm.thisBudget);
+            formData.append('this_target_category', vm.thisTargetCategory);
+            formData.append('other_budget', vm.otherBudget);
+            formData.append('other_target_category', vm.otherTargetCategory);
+            formData.append('start_date', vm.startDate);
 
             var missingTransactions = budgetComparerService.compare(formData)
                 .then(function(response) {
-                    $scope.thisMissingTransactions = response.data.this_missing;
-                    $scope.thisMissingTransactions.sort($scope.sortTransactionsByDateAsc);
+                    vm.thisMissingTransactions = response.data.this_missing;
+                    vm.thisMissingTransactions.sort(vm.sortTransactionsByDateAsc);
 
-                    $scope.otherMissingTransactions = response.data.other_missing;
-                    $scope.otherMissingTransactions.sort($scope.sortTransactionsByDateAsc);
+                    vm.otherMissingTransactions = response.data.other_missing;
+                    vm.otherMissingTransactions.sort(vm.sortTransactionsByDateAsc);
 
-                    $scope.comparisonAttempted = true;
-                    $scope.comparisonExecuting = false;
+                    vm.comparisonAttempted = true;
+                    vm.comparisonExecuting = false;
                 }, function(response){
-                    $scope.comparisonExecuting = false;
-                    $scope.comparisonErrors.push(response);
+                    vm.comparisonExecuting = false;
+                    vm.comparisonErrors.push(response);
                 });
 
-        };
+        }
 
-        $scope.sortTransactionsByDateAsc = function(a, b) {
+        function sortTransactionsByDateAsc(a, b) {
             return new Date(a.date).getTime() - new Date(b.date).getTime();
         }
     }
