@@ -68,7 +68,8 @@
                           There has been an error comparing budgets
                         </div>
                         <ul class="list" data-ng-repeat="error in comparisonErrors">
-                          <li>[[error.statusText]] (Error [[error.status]])</li>
+                          <li>[[error.statusText]] (Error [[error.status]])
+                              <br>[[error.data.message]]</li>
                         </ul>
                     </div>
                 </div>
