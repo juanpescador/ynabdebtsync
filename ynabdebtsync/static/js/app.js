@@ -7,6 +7,7 @@
             /*
              * Feature areas.
              */
+            'app.localbudgets',
             'app.dropbox'
         ]);
 })();

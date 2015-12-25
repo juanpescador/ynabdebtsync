@@ -2,12 +2,12 @@
     'use strict';
 
     angular
-        .module('app')
-        .controller('BudgetUploadController', BudgetUploadController);
+        .module('app.localbudgets')
+        .controller('LocalBudgets', LocalBudgets);
 
-    BudgetUploadController.$inject = ['$scope', 'budgetComparerService'];
+    LocalBudgets.$inject = ['$scope', 'budgetComparerService'];
 
-    function BudgetUploadController($scope, budgetComparerService) {
+    function LocalBudgets($scope, budgetComparerService) {
         $scope.comparisonAttempted = false;
         $scope.comparisonExecuting = false;
         $scope.comparisonErrors = [];
