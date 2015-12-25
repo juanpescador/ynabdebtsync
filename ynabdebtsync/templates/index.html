@@ -30,11 +30,10 @@
                         <h1 class="ui header"><i class="user icon"></i>
                             <div class="content">Your budget</div>
                         </h1>
-                        <label for="thisBudget" class="ui icon button">
+                        <label class="ui button">
                             <i class="file icon"></i>
-                            Choose file
+                            <input type="file" id="thisBudget" data-file-property="vm.thisBudget" />
                         </label>
-                        <input type="file" id="thisBudget" style="display: none" data-file-property="vm.thisBudget" />
                         <div class="ui input">
                             <input type="text" placeholder="Target category name" data-ng-model="vm.thisTargetCategory" />
                         </div>
@@ -46,11 +45,10 @@
                         <h1 class="ui header"><i class="users icon"></i>
                             <div class="content">Their budget</div>
                         </h1>
-                        <label for="otherBudget" class="ui icon button">
+                        <label class="ui button">
                             <i class="file icon"></i>
-                            Choose file
+                            <input type="file" id="otherBudget" data-file-property="vm.otherBudget" />
                         </label>
-                        <input type="file" id="otherBudget" style="display: none" data-file-property="vm.otherBudget" />
                         <div class="ui input">
                             <input type="text" placeholder="Target category name" data-ng-model="vm.otherTargetCategory" />
                         </div>
