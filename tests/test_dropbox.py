@@ -20,4 +20,3 @@ def test_get_budget_file_returns_budget():
     budget_file = db.get_budget_file(budget['path'])
     print ('Budget {name} file has {count} characters'
                 .format(name=budget['name'], count=len(budget_file)))
-    print budget_file
