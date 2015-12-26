@@ -6,10 +6,13 @@
     <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
     <script src="{{ url_for('static', filename='css/semantic.js') }}"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.3/angular.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.15/angular-ui-router.js"></script>
     <script src="{{ url_for('static', filename='js/app.js') }}"></script>
     <script src="{{ url_for('static', filename='js/app.config.js') }}"></script>
     <script src="{{ url_for('static', filename='js/core/core.module.js') }}"></script>
     <script src="{{ url_for('static', filename='js/core/budgetComparerService.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/layout/layout.module.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/layout/config.route.js') }}"></script>
     <script src="{{ url_for('static', filename='js/widgets/widgets.module.js') }}"></script>
     <script src="{{ url_for('static', filename='js/widgets/missingTransactionList.directive.js') }}"></script>
     <script src="{{ url_for('static', filename='js/dropbox/dropbox.module.js') }}"></script>
@@ -22,76 +25,8 @@
 {% block content %}
 <div>Hello, your token is {{ session['dropbox_token'] }}
 <div style="padding: 2em" data-ng-app="app">
-    <div data-ng-controller="LocalBudgets as vm">
-        <div class="ui stackable two column grid">
-            <form class="form row" data-ng-submit="vm.compareBudgets()">
-                <div class="column">
-                    <div class="fields">
-                        <h1 class="ui header"><i class="user icon"></i>
-                            <div class="content">Your budget</div>
-                        </h1>
-                        <label class="ui button">
-                            <i class="file icon"></i>
-                            <input type="file" id="thisBudget" data-file-property="vm.thisBudget" />
-                        </label>
-                        <div class="ui input">
-                            <input type="text" placeholder="Target category name" data-ng-model="vm.thisTargetCategory" />
-                        </div>
-                    </div>
-                </div>
-
-                <div class="column">
-                    <div class="fields">
-                        <h1 class="ui header"><i class="users icon"></i>
-                            <div class="content">Their budget</div>
-                        </h1>
-                        <label class="ui button">
-                            <i class="file icon"></i>
-                            <input type="file" id="otherBudget" data-file-property="vm.otherBudget" />
-                        </label>
-                        <div class="ui input">
-                            <input type="text" placeholder="Target category name" data-ng-model="vm.otherTargetCategory" />
-                        </div>
-                    </div>
-                </div>
-                <div class="column">
-                    <div class="ui input">
-                        <input type="text" placeholder="Comparison start date" data-ng-model="vm.startDate" />
-                    </div>
-                    <br />
-                    <button class="ui button primary" data-ng-class="{'loading': vm.comparisonExecuting}">Compare budgets</button>
-                    <div class="ui error message" data-ng-show="vm.comparisonErrors.length > 0">
-                        <i class="close icon" data-ng-click="vm.comparisonErrors = []"></i>
-                        <div class="header">
-                          There has been an error comparing budgets
-                        </div>
-                        <ul class="list" data-ng-repeat="error in vm.comparisonErrors">
-                          <li>[[error.statusText]] (Error [[error.status]])
-                              <br>[[error.data.message]]</li>
-                        </ul>
-                    </div>
-                </div>
-            </form>
-        </div>
-        <div class="ui stackable two column grid" data-ng-show="vm.comparisonAttempted">
-            <div class="column">
-                <missing-transaction-list data-missing-transactions="vm.thisMissingTransactions" />
-            </div>
-            <div class="column">
-                <missing-transaction-list data-missing-transactions="vm.otherMissingTransactions" />
-            </div>
-        </div>
-    </div>
-
-    <div data-ng-controller="DropboxController as vm">
-        <button ng-click="vm.getBudgets('mine')">Get my budgets</button>
-        <ul>
-            <li data-ng-repeat="budget in vm.thisBudgets">[[budget.name]] - [[budget.path]]</li>
-        </ul>
-        <button ng-click="vm.getBudgets('theirs')">Get their budgets</button>
-        <ul>
-            <li data-ng-repeat="budget in vm.otherBudgets">[[budget.name]] - [[budget.path]]</li>
-        </ul>
-    </div>
+    <div ui-view></div>
+    <a ui-sref="localbudgets">Local Budgets</a>
+    <a ui-sref="dropboxbudgets">Dropbox Budgets</a>
 </div>
 {% endblock %}
