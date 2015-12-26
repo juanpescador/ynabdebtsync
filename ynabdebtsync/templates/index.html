@@ -59,7 +59,7 @@
                         <input type="text" placeholder="Comparison start date" data-ng-model="vm.startDate" />
                     </div>
                     <br />
-                    <button class="ui button primary" data-button-status>Compare budgets</button>
+                    <button class="ui button primary" data-ng-class="{'loading': vm.comparisonExecuting}">Compare budgets</button>
                     <div class="ui error message" data-ng-show="vm.comparisonErrors.length > 0">
                         <i class="close icon" data-ng-click="vm.comparisonErrors = []"></i>
                         <div class="header">
