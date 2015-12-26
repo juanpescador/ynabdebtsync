@@ -3,13 +3,18 @@
 
     angular
         .module('app')
-        .config(interpolateProviderConfig);
+        .config(interpolateProviderConfig)
+        .config(locationProviderConfig);
 
-    interpolateProviderConfig.$inject = ['$interpolateProvider'];
+    interpolateProviderConfig.$inject = ['$interpolateProvider', '$locationProvider'];
 
     function interpolateProviderConfig($interpolateProvider) {
         $interpolateProvider.startSymbol('[[');
         $interpolateProvider.endSymbol(']]');
+    }
+
+    function locationProviderConfig($locationProvider) {
+        return $locationProvider.html5Mode(true);
     }
 
 })();
