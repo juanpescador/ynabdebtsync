@@ -2,7 +2,7 @@
     'use strict';
 
     angular
-        .module('app')
+        .module('app.widgets')
         .directive('missingTransactionList', missingTransactionList);
 
     function missingTransactionList() {
@@ -11,7 +11,7 @@
             scope: {
                 missingTransactions: '='
             },
-            templateUrl: '/static/js/templates/missingTransactionList.template.html'
+            templateUrl: '/static/js/widgets/missingTransactionList.template.html'
         };
     }
 })();

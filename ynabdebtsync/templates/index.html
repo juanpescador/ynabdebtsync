@@ -10,14 +10,14 @@
     <script src="{{ url_for('static', filename='js/app.config.js') }}"></script>
     <script src="{{ url_for('static', filename='js/core/core.module.js') }}"></script>
     <script src="{{ url_for('static', filename='js/core/budgetComparerService.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/widgets/widgets.module.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/widgets/missingTransactionList.directive.js') }}"></script>
     <script src="{{ url_for('static', filename='js/dropbox/dropbox.module.js') }}"></script>
     <script src="{{ url_for('static', filename='js/dropbox/dropbox.js') }}"></script>
     <script src="{{ url_for('static', filename='js/dropbox/dropboxservice.js') }}"></script>
     <script src="{{ url_for('static', filename='js/localbudgets/localbudgets.module.js') }}"></script>
     <script src="{{ url_for('static', filename='js/localbudgets/localbudgets.js') }}"></script>
     <script src="{{ url_for('static', filename='js/localbudgets/fileProperty.directive.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/directives/buttonStatus.directive.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/directives/missingTransactionList.directive.js') }}"></script>
 {% endblock %}
 {% block content %}
 <div>Hello, your token is {{ session['dropbox_token'] }}
