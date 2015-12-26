@@ -25,8 +25,8 @@
     <script src="{{ url_for('static', filename='js/localbudgets/fileProperty.directive.js') }}"></script>
 {% endblock %}
 {% block content %}
-<div>Hello, your token is {{ session['dropbox_token'] }}
-<div style="padding: 2em" data-ng-app="app">
+<div>Hello, your token is {{ session['dropbox_token'] }}</div>
+<div style="padding: 2em">
     <div data-ng-include="'{{ url_for('static', filename='js/layout/shell.html') }}'">
 </div>
 {% endblock %}

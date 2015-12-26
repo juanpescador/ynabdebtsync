@@ -19,11 +19,11 @@
         ////////////////
 
         function activate() {
-            getNavRoutes();
+            vm.navRoutes = getNavRoutes();
         }
 
         function getNavRoutes() {
-            vm.navRoutes = routes.filter(function(route) {
+            return routes.filter(function(route) {
                 return route.data && route.data.nav;
             }).sort(function(a, b) {
                 return a.data.nav - b.data.nav;
