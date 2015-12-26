@@ -7,6 +7,7 @@
             /*
              * Feature areas.
              */
+            'app.layout',
             'app.localbudgets',
             'app.dropbox',
             'app.widgets'

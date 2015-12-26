@@ -6,13 +6,14 @@
     <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
     <script src="{{ url_for('static', filename='css/semantic.js') }}"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.3/angular.js"></script>
+    <script src="//code.angularjs.org/1.4.3/angular-sanitize.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.15/angular-ui-router.js"></script>
     <script src="{{ url_for('static', filename='js/app.js') }}"></script>
     <script src="{{ url_for('static', filename='js/app.config.js') }}"></script>
     <script src="{{ url_for('static', filename='js/core/core.module.js') }}"></script>
     <script src="{{ url_for('static', filename='js/core/budgetComparerService.js') }}"></script>
     <script src="{{ url_for('static', filename='js/layout/layout.module.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/layout/config.route.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/layout/shell.js') }}"></script>
     <script src="{{ url_for('static', filename='js/widgets/widgets.module.js') }}"></script>
     <script src="{{ url_for('static', filename='js/widgets/missingTransactionList.directive.js') }}"></script>
     <script src="{{ url_for('static', filename='js/dropbox/dropbox.module.js') }}"></script>
@@ -20,13 +21,12 @@
     <script src="{{ url_for('static', filename='js/dropbox/dropboxservice.js') }}"></script>
     <script src="{{ url_for('static', filename='js/localbudgets/localbudgets.module.js') }}"></script>
     <script src="{{ url_for('static', filename='js/localbudgets/localbudgets.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/localbudgets/config.route.js') }}"></script>
     <script src="{{ url_for('static', filename='js/localbudgets/fileProperty.directive.js') }}"></script>
 {% endblock %}
 {% block content %}
 <div>Hello, your token is {{ session['dropbox_token'] }}
 <div style="padding: 2em" data-ng-app="app">
-    <div ui-view></div>
-    <a ui-sref="localbudgets">Local Budgets</a>
-    <a ui-sref="dropboxbudgets">Dropbox Budgets</a>
+    <div data-ng-include="'{{ url_for('static', filename='js/layout/shell.html') }}'">
 </div>
 {% endblock %}
