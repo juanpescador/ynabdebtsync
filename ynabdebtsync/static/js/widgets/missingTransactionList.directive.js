@@ -11,7 +11,7 @@
             scope: {
                 missingTransactions: '='
             },
-            templateUrl: '/static/js/widgets/missingTransactionList.template.html'
+            templateUrl: '/static/js/widgets/missingTransactionList.html'
         };
     }
 })();
