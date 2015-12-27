@@ -1,11 +1,9 @@
 # -*- coding: utf8 -*-
 
 
-from flask import Flask
+from server import flask_app
 from flask import render_template, session, request, redirect, url_for
 import urllib
-
-flask_app = Flask(__name__)
 
 @flask_app.route('/', methods=['GET', 'POST'])
 def index():

@@ -2,7 +2,7 @@
 
 import werkzeug
 
-from app import flask_app
+from server import flask_app
 from flask import request
 from flask_restful import Resource, Api, reqparse
 from ynabbudget import YnabBudgetComparer
