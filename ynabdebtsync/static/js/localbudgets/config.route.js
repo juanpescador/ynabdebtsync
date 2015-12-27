@@ -8,7 +8,7 @@
     localbudgetsConfig.$inject = ['$stateProvider', '$urlRouterProvider'];
 
     function localbudgetsConfig($stateProvider, $urlRouterProvider) {
-        $urlRouterProvider.otherwise('/localbudgets');
+        $urlRouterProvider.when('', '/localbudgets');
 
         $stateProvider
             .state('localbudgets', {
