@@ -13,8 +13,8 @@
         $interpolateProvider.endSymbol(']]');
     }
 
-    function locationProviderConfig($locationProvider) {
-        return $locationProvider.html5Mode(true);
-    }
+    locationProviderConfig.$inject = ['$locationProvider'];
 
+    function locationProviderConfig($locationProvider) {
+    }
 })();
