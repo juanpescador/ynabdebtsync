@@ -1,6 +1,6 @@
 <div data-ng-controller="DropboxController as vm">
-    <span ng-show="vm.isAuthed()">Authed</span>
-    <span ng-hide="vm.isAuthed()" data-ng-bind-html="vm.dropboxAuthLink()"></span>
+    <span ng-show="vm.isAuthenticated()">Authed</span>
+    <span ng-hide="vm.isAuthenticated()" data-ng-bind-html="vm.getAuthLink()"></span>
     <button ng-click="vm.getBudgets('mine')">Get my budgets</button>
     <ul>
         <li data-ng-repeat="budget in vm.thisBudgets">[[budget.name]] - [[budget.path]]</li>
