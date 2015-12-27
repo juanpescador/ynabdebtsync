@@ -5,9 +5,9 @@
         .module('app.dropbox')
         .factory('dropboxService', dropboxService);
 
-    dropboxService.$inject = ['$http'];
+    dropboxService.$inject = ['$http', '$location'];
 
-    function dropboxService($http) {
+    function dropboxService($http, $location) {
         var accessToken = "";
         var service = {
             getAccessToken: getAccessToken,
@@ -25,7 +25,9 @@
         }
 
         function getAuthLink() {
-            return '<a href="https://www.dropbox.com/1/oauth2/authorize?redirect_uri=http%3A%2F%2Flocalhost%3A5000&response_type=token&client_id=uo6kvpwo8rv9bqi">Authenticate with dropbox</a>';
+            var redirectUri = $location.protocol() + '://' + $location.host() + ':' + $location.port();
+            var uriEncodedRedirectUri = encodeURIComponent(redirectUri);
+            return '<a href="https://www.dropbox.com/1/oauth2/authorize?redirect_uri=' + uriEncodedRedirectUri + '&response_type=token&client_id=uo6kvpwo8rv9bqi">Authenticate with dropbox</a>';
         }
 
         function getAllBudgets(whose) {
