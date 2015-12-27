@@ -36,7 +36,7 @@ class CategoryComparison(Resource):
 
 class DropboxBudgets(Resource):
     def get(self, whose):
-        token = 'atoken'
+        token = request.args['access_token']
         db = Dropbox(token)
 
         if whose == 'mine':

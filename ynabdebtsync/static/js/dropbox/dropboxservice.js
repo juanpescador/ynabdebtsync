@@ -30,7 +30,7 @@
         function getAllBudgets(whose) {
             var request = {
                 method: 'GET',
-                url: '/api/dropboxbudgets/' + whose
+                url: '/api/dropboxbudgets/' + whose + '?access_token=' + accessToken
             }
 
             return $http(request)
