@@ -3,78 +3,32 @@
 {% block head %}
     {{ super() }}
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/semantic.css') }}">
-    <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+    <script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
     <script src="{{ url_for('static', filename='css/semantic.js') }}"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.3/angular.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.3/angular.js"></script>
+    <script src="//code.angularjs.org/1.4.3/angular-sanitize.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.15/angular-ui-router.js"></script>
     <script src="{{ url_for('static', filename='js/app.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/services/budgetComparerService.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/controllers/budgetUploadCtrl.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/directives/fileVariable.directive.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/directives/buttonStatus.directive.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/directives/missingTransactionList.directive.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/app.config.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/core/core.module.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/core/config.route.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/core/budgetComparerService.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/layout/layout.module.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/layout/shell.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/widgets/widgets.module.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/widgets/missingTransactionList.directive.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/dropbox/dropbox.module.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/dropbox/dropbox.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/dropbox/config.route.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/dropbox/dropboxservice.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/localbudgets/localbudgets.module.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/localbudgets/localbudgets.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/localbudgets/config.route.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/localbudgets/fileProperty.directive.js') }}"></script>
 {% endblock %}
 {% block content %}
-<div style="padding: 2em" data-ng-app="ynabDebtSync">
-    <div data-ng-controller="budgetUploadCtrl">
-        <div class="ui stackable two column grid">
-            <form class="form row" data-ng-submit="compareBudgets()">
-                <div class="column">
-                    <div class="fields">
-                        <h1 class="ui header"><i class="user icon"></i>
-                            <div class="content">Your budget</div>
-                        </h1>
-                        <label for="thisBudget" class="ui icon button">
-                            <i class="file icon"></i>
-                            Choose file
-                        </label>
-                        <input type="file" id="thisBudget" style="display: none" data-file-variable="thisBudget" />
-                        <div class="ui input">
-                            <input type="text" placeholder="Target category name" data-ng-model="thisTargetCategory" />
-                        </div>
-                    </div>
-                </div>
-
-                <div class="column">
-                    <div class="fields">
-                        <h1 class="ui header"><i class="users icon"></i>
-                            <div class="content">Their budget</div>
-                        </h1>
-                        <label for="otherBudget" class="ui icon button">
-                            <i class="file icon"></i>
-                            Choose file
-                        </label>
-                        <input type="file" id="otherBudget" style="display: none" data-file-variable="otherBudget" />
-                        <div class="ui input">
-                            <input type="text" placeholder="Target category name" data-ng-model="otherTargetCategory" />
-                        </div>
-                    </div>
-                </div>
-                <div class="column">
-                    <div class="ui input">
-                        <input type="text" placeholder="Comparison start date" data-ng-model="startDate" />
-                    </div>
-                    <br />
-                    <button class="ui button primary" data-button-status>Compare budgets</button>
-                    <div class="ui error message" data-ng-show="comparisonErrors.length > 0">
-                        <i class="close icon" data-ng-click="comparisonErrors = []"></i>
-                        <div class="header">
-                          There has been an error comparing budgets
-                        </div>
-                        <ul class="list" data-ng-repeat="error in comparisonErrors">
-                          <li>[[error.statusText]] (Error [[error.status]])</li>
-                        </ul>
-                    </div>
-                </div>
-            </form>
-        </div>
-        <div class="ui stackable two column grid" data-ng-show="comparisonAttempted">
-            <div class="column">
-                <missing-transaction-list data-missing-transactions="thisMissingTransactions" />
-            </div>
-            <div class="column">
-                <missing-transaction-list data-missing-transactions="otherMissingTransactions" />
-            </div>
-        </div>
-    </div>
+<div>Hello, your token is {{ session['dropbox_token'] }}</div>
+<div style="padding: 2em">
+    <div data-ng-include="'{{ url_for('static', filename='js/layout/shell.html') }}'">
 </div>
 {% endblock %}

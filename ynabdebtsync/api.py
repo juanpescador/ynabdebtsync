@@ -6,6 +6,7 @@ from . import flask_app
 from flask import request
 from flask_restful import Resource, Api, reqparse
 from ynabbudget import YnabBudgetComparer
+from dropbox import Dropbox
 
 api = Api(flask_app)
 
@@ -33,5 +34,41 @@ class CategoryComparison(Resource):
     def get(self):
         return {"key": "value"}
 
+class DropboxBudgets(Resource):
+    def post(self, whose):
+        token = request.get_json()['access_token']
+        db = Dropbox(token)
+
+        if whose == 'mine':
+            budgets = db.get_own_budgets()
+        elif whose == 'theirs':
+            budgets = db.get_their_budgets()
+        return budgets
+
+class DropboxBudgetComparison(Resource):
+    def post(self):
+        json = request.get_json()
+        token = json['access_token']
+        this_budget_path = json['this_budget_path']
+        other_budget_path = json['other_budget_path']
+
+        db = Dropbox(token)
+
+        this_json = db.get_budget_file(this_budget_path)
+        other_json = db.get_budget_file(other_budget_path)
+
+        this_target_category = "eli"
+        other_target_category = "john"
+
+        start_date = "2015"
+
+        comparer = YnabBudgetComparer(this_json, this_target_category, other_json, other_target_category)
+        comparer.set_start_date(start_date)
+
+        missing_txns = comparer.get_missing_transactions()
+        return {"this_missing": missing_txns[0], "other_missing": missing_txns[1]}
+
 api.add_resource(CategoryComparison, "/api/categorycomparison")
+api.add_resource(DropboxBudgets, "/api/dropboxbudgets/<string:whose>")
+api.add_resource(DropboxBudgetComparison, "/api/dropboxbudgetcomparison")
 

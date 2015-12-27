@@ -1,0 +1,8 @@
+<div data-ng-controller="Shell as vm">
+    <div class="ui top fixed inverted menu">
+        <div class="item" data-ng-repeat="r in vm.navRoutes">
+            <a data-ng-bind-html="r.data.content" data-ui-sref="[[r.name]]"></a>
+        </div>
+    </div>
+    <div ui-view></div>
+</div>
