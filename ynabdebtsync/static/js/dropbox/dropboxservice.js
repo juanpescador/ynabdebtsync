@@ -14,7 +14,8 @@
             getAuthLink: getAuthLink,
             getAllBudgets: getAllBudgets,
             isAuthenticated: isAuthenticated,
-            setAccessToken: setAccessToken
+            setAccessToken: setAccessToken,
+            compare: compare
         };
 
         return service;
@@ -48,6 +49,23 @@
 
         function setAccessToken(token) {
             accessToken = token;
+        }
+
+        function compare(thisBudgetPath, otherBudgetPath) {
+            var request = {
+                method: 'POST',
+                url: '/api/dropboxbudgetcomparison',
+                data: {
+                    access_token: accessToken,
+                    this_budget_path: thisBudgetPath,
+                    other_budget_path: otherBudgetPath
+                }
+            }
+
+            return $http(request)
+                .then(function(response) {
+                    return response;
+                });
         }
     }
 })();

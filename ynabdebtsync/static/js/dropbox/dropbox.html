@@ -1,12 +1,21 @@
 <div data-ng-controller="DropboxController as vm">
-    <span ng-show="vm.isAuthenticated()">Authed</span>
+    <a ng-show="vm.isAuthenticated()" data-ng-click="vm.logOut()">Log out</a>
     <span ng-hide="vm.isAuthenticated()" data-ng-bind-html="vm.getAuthLink()"></span>
     <button ng-click="vm.getBudgets('mine')">Get my budgets</button>
     <ul>
-        <li data-ng-repeat="budget in vm.thisBudgets">[[budget.name]] - [[budget.path]]</li>
+        <li data-ng-repeat="budget in vm.thisBudgets" data-ng-click="vm.thisBudgetPath = budget.path">[[budget.name]] - [[budget.path]]</li>
     </ul>
     <button ng-click="vm.getBudgets('theirs')">Get their budgets</button>
     <ul>
-        <li data-ng-repeat="budget in vm.otherBudgets">[[budget.name]] - [[budget.path]]</li>
+        <li data-ng-repeat="budget in vm.otherBudgets" data-ng-click="vm.otherBudgetPath = budget.path">[[budget.name]] - [[budget.path]]</li>
     </ul>
+    <button type="button" data-ng-click="vm.compare()">Compare</button>
+    <div class="ui stackable two column grid" data-ng-show="vm.comparisonAttempted">
+        <div class="column">
+            <missing-transaction-list data-missing-transactions="vm.thisMissingTransactions" />
+        </div>
+        <div class="column">
+            <missing-transaction-list data-missing-transactions="vm.otherMissingTransactions" />
+        </div>
+    </div>
 </div>
