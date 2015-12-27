@@ -2,13 +2,14 @@
 
 import werkzeug
 
-from . import flask_app
+from app import flask_app
 from flask import request
 from flask_restful import Resource, Api, reqparse
 from ynabbudget import YnabBudgetComparer
 from dropbox import Dropbox
 
 api = Api(flask_app)
+print "Instantiated api from flask_app"
 
 class CategoryComparison(Resource):
     def post(self):
@@ -69,6 +70,7 @@ class DropboxBudgetComparison(Resource):
         return {"this_missing": missing_txns[0], "other_missing": missing_txns[1]}
 
 api.add_resource(CategoryComparison, "/api/categorycomparison")
+print "Added CategoryComparison endpoint to API"
 api.add_resource(DropboxBudgets, "/api/dropboxbudgets/<string:whose>")
 api.add_resource(DropboxBudgetComparison, "/api/dropboxbudgetcomparison")
 
