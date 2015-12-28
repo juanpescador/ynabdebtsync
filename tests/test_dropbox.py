@@ -9,13 +9,13 @@ token = 'token'
 
 def test_get_budgets_returns_all_budgets():
     db = dropbox.Dropbox(token)
-    budgets = db.get_all_budgets()
+    budgets = db.get_own_budgets()
     budget = budgets[0]
     assert_equal(budget['name'], 'dineros')
 
 def test_get_budget_file_returns_budget():
     db = dropbox.Dropbox(token)
-    budgets = db.get_all_budgets()
+    budgets = db.get_own_budgets()
     budget = budgets[0]
     budget_file = db.get_budget_file(budget['path'])
     print ('Budget {name} file has {count} characters'
