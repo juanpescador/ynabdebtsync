@@ -4,8 +4,8 @@ from ynabdebtsync import dropbox
 from nose.tools import assert_equal
 
 # Assumes one budget named dineros.
-# Generate a token at https://www.dropbox.com/developers/apps/info/uo6kvpwo8rv9bqi
-token = '2s8cc2RuxUEAAAAAAAABABrV-tejV9yR7XeRNs53VGMh9l0FBh4xbpHDWFQeP8c2'
+# Generate a token at https://www.dropbox.com/developers
+token = 'token'
 
 def test_get_budgets_returns_all_budgets():
     db = dropbox.Dropbox(token)
