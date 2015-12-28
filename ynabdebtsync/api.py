@@ -54,6 +54,9 @@ class DropboxBudgets(Resource):
 
 class DropboxBudgetComparison(Resource):
     def post(self):
+        method_start = time.clock()
+        flask_app.logger.debug("Comparing budgets")
+
         json = request.get_json()
         token = json['access_token']
         this_budget_path = json['this_budget_path']
@@ -70,23 +73,25 @@ class DropboxBudgetComparison(Resource):
         start = time.clock()
         other_json = db.get_budget_file(other_budget_path)
         end = time.clock()
-        flask_app.logger.debug("Get other budget time elapsed: {time}s, {speed} KB/s".format(time=elapsed, speed=(len(this_json) // 1024 // elapsed)))
+        elapsed = end - start
+        flask_app.logger.debug("Get other budget time elapsed: {time}s, {speed} KB/s".format(time=elapsed, speed=(len(other_json) // 1024 // elapsed)))
 
         this_target_category = "eli"
         other_target_category = "john"
 
         start_date = "2015"
 
-        start = time.clock()
         comparer = YnabBudgetComparer(this_json, this_target_category, other_json, other_target_category)
-        end = time.clock()
-        flask_app.logger.debug("Instantiate YnabBudgetComparer time elapsed: {time}s".format(time=(end - start)))
         comparer.set_start_date(start_date)
 
         start = time.clock()
         missing_txns = comparer.get_missing_transactions()
         end = time.clock()
-        flask_app.logger.debug("Compare budgets time elapsed: {time}s".format(time=(end - start)))
+        flask_app.logger.debug("Find missing transactions time elapsed: {time}s".format(time=(end - start)))
+
+        method_finish = time.clock()
+        method_elapsed = method_finish - method_start
+        flask_app.logger.debug("Finished comparing budgets. Time elapsed: {time}s".format(time=method_elapsed))
         return {"this_missing": missing_txns[0], "other_missing": missing_txns[1]}
 
 api.add_resource(CategoryComparison, "/api/categorycomparison")
