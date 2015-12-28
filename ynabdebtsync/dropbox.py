@@ -4,6 +4,11 @@ import dateutil.parser
 import datetime
 import json
 import requests
+import logging
+
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
+logger.addHandler(logging.NullHandler())
 
 class Dropbox(object):
     """Wrapper to Dropbox's HTTP API:

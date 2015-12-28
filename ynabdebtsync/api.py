@@ -1,6 +1,7 @@
 # -*- coding: utf8 -*-
 
 import werkzeug
+import time
 
 from server import flask_app
 from flask import request
@@ -9,7 +10,6 @@ from ynabbudget import YnabBudgetComparer
 from dropbox import Dropbox
 
 api = Api(flask_app)
-print "Instantiated api from flask_app"
 
 class CategoryComparison(Resource):
     def post(self):
@@ -41,9 +41,15 @@ class DropboxBudgets(Resource):
         db = Dropbox(token)
 
         if whose == 'mine':
+            start = time.clock()
             budgets = db.get_own_budgets()
+            end = time.clock()
+            flask_app.logger.info("Get own budgets time elapsed: {time}s".format(time=(end - start)))
         elif whose == 'theirs':
+            start = time.clock()
             budgets = db.get_their_budgets()
+            end = time.clock()
+            flask_app.logger.info("Get their budgets time elapsed: {time}s".format(time=(end - start)))
         return budgets
 
 class DropboxBudgetComparison(Resource):
@@ -55,22 +61,34 @@ class DropboxBudgetComparison(Resource):
 
         db = Dropbox(token)
 
+        start = time.clock()
         this_json = db.get_budget_file(this_budget_path)
+        end = time.clock()
+        flask_app.logger.info("Get this budget time elapsed: {time}s, {speed} KB/s".format(time=(end - start), speed=(len(this_json) // 1000 // end)))
+
+        start = time.clock()
         other_json = db.get_budget_file(other_budget_path)
+        end = time.clock()
+        flask_app.logger.info("Get other budget time elapsed: {time}s, {speed} KB/s".format(time=(end - start), speed=(len(this_json) // 1000 // end)))
 
         this_target_category = "eli"
         other_target_category = "john"
 
         start_date = "2015"
 
+        start = time.clock()
         comparer = YnabBudgetComparer(this_json, this_target_category, other_json, other_target_category)
+        end = time.clock()
+        flask_app.logger.info("Instantiate YnabBudgetComparer time elapsed: {time}s".format(time=(end - start)))
         comparer.set_start_date(start_date)
 
+        start = time.clock()
         missing_txns = comparer.get_missing_transactions()
+        end = time.clock()
+        flask_app.logger.info("Compare budgets time elapsed: {time}s".format(time=(end - start)))
         return {"this_missing": missing_txns[0], "other_missing": missing_txns[1]}
 
 api.add_resource(CategoryComparison, "/api/categorycomparison")
-print "Added CategoryComparison endpoint to API"
 api.add_resource(DropboxBudgets, "/api/dropboxbudgets/<string:whose>")
 api.add_resource(DropboxBudgetComparison, "/api/dropboxbudgetcomparison")
 
