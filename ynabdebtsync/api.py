@@ -55,7 +55,7 @@ class DropboxBudgets(Resource):
 class DropboxBudgetComparison(Resource):
     def post(self):
         method_start = time.clock()
-        flask_app.logger.debug("Comparing budgets")
+        flask_app.logger.info("Comparing budgets")
 
         json = request.get_json()
         token = json['access_token']
@@ -68,13 +68,13 @@ class DropboxBudgetComparison(Resource):
         this_json = db.get_budget_file(this_budget_path)
         end = time.clock()
         elapsed = end - start
-        flask_app.logger.debug("Get this budget time elapsed: {time}s, {speed} KB/s".format(time=elapsed, speed=(len(this_json) // 1024 // elapsed)))
+        flask_app.logger.debug("Get this budget time elapsed: {time}s".format(time=elapsed))
 
         start = time.clock()
         other_json = db.get_budget_file(other_budget_path)
         end = time.clock()
         elapsed = end - start
-        flask_app.logger.debug("Get other budget time elapsed: {time}s, {speed} KB/s".format(time=elapsed, speed=(len(other_json) // 1024 // elapsed)))
+        flask_app.logger.debug("Get other budget time elapsed: {time}s".format(time=elapsed))
 
         this_target_category = "eli"
         other_target_category = "john"
@@ -91,7 +91,7 @@ class DropboxBudgetComparison(Resource):
 
         method_finish = time.clock()
         method_elapsed = method_finish - method_start
-        flask_app.logger.debug("Finished comparing budgets. Time elapsed: {time}s".format(time=method_elapsed))
+        flask_app.logger.info("Finished comparing budgets. Time elapsed: {time}s".format(time=method_elapsed))
         return {"this_missing": missing_txns[0], "other_missing": missing_txns[1]}
 
 api.add_resource(CategoryComparison, "/api/categorycomparison")
