@@ -158,6 +158,21 @@ class Dropbox(object):
 
         start = time.clock()
         r = self.session.post(self.dropbox_endpoints['download'], headers=headers)
+        # Flask uses chardet to determine the response's content's character
+        # encoding if none was specified in the response headers. chardet is
+        # extremely slow for long strings, and the YNAB budget can easily be
+        # >1MB. YNAB stores its budget in utf-8. Setting the encoding here
+        # speeds up access to r.text by four orders of magnitude:
+        #
+        # Using chardet to detect encoding:
+        # >>> t = timeit.Timer(lambda: type(resp.text))
+        # >>> print '{seconds:f}s'.format(seconds=t.timeit(number=1))
+        # 55.349593s
+        # Explicitly stating the encoding:
+        # >>> resp.encoding = 'utf-8'
+        # >>> print '{seconds:f}s'.format(seconds=t.timeit(number=1))
+        # 0.005808s
+        r.encoding = 'utf-8'
         end = time.clock()
         elapsed = end - start
         budget_size = newest_budget_file['size']
