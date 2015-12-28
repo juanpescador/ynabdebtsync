@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+import unittest
+
 from ynabdebtsync import dropbox
 from nose.tools import assert_equal
 
@@ -7,12 +9,14 @@ from nose.tools import assert_equal
 # Generate a token at https://www.dropbox.com/developers
 token = 'token'
 
+@unittest.skip("integration test, requires setting the token variable")
 def test_get_budgets_returns_all_budgets():
     db = dropbox.Dropbox(token)
     budgets = db.get_own_budgets()
     budget = budgets[0]
     assert_equal(budget['name'], 'dineros')
 
+@unittest.skip("integration test, requires setting the token variable")
 def test_get_budget_file_returns_budget():
     db = dropbox.Dropbox(token)
     budgets = db.get_own_budgets()
@@ -21,6 +25,7 @@ def test_get_budget_file_returns_budget():
     print ('Budget {name} file has {count} characters'
                 .format(name=budget['name'], count=len(budget_file)))
 
+@unittest.skip("integration test, requires setting the token variable")
 def test_line_profile_get_budget_file_returns_budget():
     db = dropbox.Dropbox(token)
     budgets = db.get_own_budgets()
@@ -69,6 +74,7 @@ def test_line_profile_get_budget_file_returns_budget():
     print ('Budget {name} file has {count} characters'
                 .format(name=budget['name'], count=len(budget_file)))
 
+@unittest.skip("integration test, requires setting the token variable")
 def test_cProfile_get_budget_file_returns_budget():
     db = dropbox.Dropbox(token)
     budgets = db.get_own_budgets()
@@ -100,6 +106,7 @@ def test_cProfile_get_budget_file_returns_budget():
     print ('Budget {name} file has {count} characters'
                 .format(name=budget['name'], count=len(budget_file)))
 
+@unittest.skip("integration test, requires setting the token variable")
 def test_dropbox_comparison():
     data = {
         'access_token': token,
