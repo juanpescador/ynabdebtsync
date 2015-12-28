@@ -44,12 +44,12 @@ class DropboxBudgets(Resource):
             start = time.clock()
             budgets = db.get_own_budgets()
             end = time.clock()
-            flask_app.logger.info("Get own budgets time elapsed: {time}s".format(time=(end - start)))
+            flask_app.logger.debug("Get own budgets time elapsed: {time}s".format(time=(end - start)))
         elif whose == 'theirs':
             start = time.clock()
             budgets = db.get_their_budgets()
             end = time.clock()
-            flask_app.logger.info("Get their budgets time elapsed: {time}s".format(time=(end - start)))
+            flask_app.logger.debug("Get their budgets time elapsed: {time}s".format(time=(end - start)))
         return budgets
 
 class DropboxBudgetComparison(Resource):
@@ -64,12 +64,13 @@ class DropboxBudgetComparison(Resource):
         start = time.clock()
         this_json = db.get_budget_file(this_budget_path)
         end = time.clock()
-        flask_app.logger.info("Get this budget time elapsed: {time}s, {speed} KB/s".format(time=(end - start), speed=(len(this_json) // 1000 // end)))
+        elapsed = end - start
+        flask_app.logger.debug("Get this budget time elapsed: {time}s, {speed} KB/s".format(time=elapsed, speed=(len(this_json) // 1024 // elapsed)))
 
         start = time.clock()
         other_json = db.get_budget_file(other_budget_path)
         end = time.clock()
-        flask_app.logger.info("Get other budget time elapsed: {time}s, {speed} KB/s".format(time=(end - start), speed=(len(this_json) // 1000 // end)))
+        flask_app.logger.debug("Get other budget time elapsed: {time}s, {speed} KB/s".format(time=elapsed, speed=(len(this_json) // 1024 // elapsed)))
 
         this_target_category = "eli"
         other_target_category = "john"
@@ -79,13 +80,13 @@ class DropboxBudgetComparison(Resource):
         start = time.clock()
         comparer = YnabBudgetComparer(this_json, this_target_category, other_json, other_target_category)
         end = time.clock()
-        flask_app.logger.info("Instantiate YnabBudgetComparer time elapsed: {time}s".format(time=(end - start)))
+        flask_app.logger.debug("Instantiate YnabBudgetComparer time elapsed: {time}s".format(time=(end - start)))
         comparer.set_start_date(start_date)
 
         start = time.clock()
         missing_txns = comparer.get_missing_transactions()
         end = time.clock()
-        flask_app.logger.info("Compare budgets time elapsed: {time}s".format(time=(end - start)))
+        flask_app.logger.debug("Compare budgets time elapsed: {time}s".format(time=(end - start)))
         return {"this_missing": missing_txns[0], "other_missing": missing_txns[1]}
 
 api.add_resource(CategoryComparison, "/api/categorycomparison")

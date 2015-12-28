@@ -4,6 +4,7 @@ import dateutil.parser
 import datetime
 import json
 import requests
+import time
 import logging
 
 logger = logging.getLogger(__name__)
@@ -126,18 +127,26 @@ class Dropbox(object):
 
         for entry in budget_dir_contents['entries']:
             if entry['.tag'] == 'file' and 'yfull' in entry['name']:
-                print 'found yfull file at {path}\n\t{date}'.format(path=entry['path_lower'], date=entry['server_modified'])
+                logger.debug(
+                    "Found budget file at {path}\n\tServer modification time: {date}"
+                    .format(path=entry['path_lower'], date=entry['server_modified'])
+                )
                 newest_budget_file = max(
                     newest_budget_file,
                     entry,
                     key=lambda x: dateutil.parser.parse(x['server_modified'])
                 )
 
+        logger.debug("Using budget file at {budget_path}"
+                     .format(budget_path=newest_budget_file))
+
         # If .tag does not exist then newest_budget_file is still the dummy
         # object and no budget file was found.
         if '.tag' not in newest_budget_file:
-            raise Exception('No budget file found for budget at "{path}"'
-                            .format(path=budget_directory_path))
+            error_msg = ('No budget file found for budget at "{path}"'
+                        .format(path=budget_directory_path))
+            logger.error(error_msg)
+            raise Exception(error_msg)
 
         # The API call for downloading a file requires an empty or non-existent
         # Content-Type header. As it is set in the requests Session object,
@@ -147,10 +156,18 @@ class Dropbox(object):
             'Content-Type': None
         }
 
+        start = time.clock()
         r = self.session.post(self.dropbox_endpoints['download'], headers=headers)
+        end = time.clock()
+        elapsed = end - start
+        logger.debug("Dropbox API call time elapsed: {time}s, {speed} KB/s".format(time=elapsed, speed=(len(r.text) // 1024 // elapsed)))
 
         if r.status_code == requests.codes.ok:
+            start = time.clock()
             budget_json = r.text.replace("\n", "")
+            end = time.clock()
+            elapsed = end - start
+            logger.debug("Remove budget newlines time elapsed: {time}s, {speed} KB/s".format(time=elapsed, speed=(len(r.text) // 1024 // elapsed)))
             return budget_json
         else:
             self.raise_exception(r, 'Could not get the budget file')
