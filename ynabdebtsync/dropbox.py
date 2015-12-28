@@ -160,14 +160,21 @@ class Dropbox(object):
         r = self.session.post(self.dropbox_endpoints['download'], headers=headers)
         end = time.clock()
         elapsed = end - start
-        logger.debug("Dropbox API call time elapsed: {time}s, {speed} KB/s".format(time=elapsed, speed=(len(r.text) // 1024 // elapsed)))
+        budget_size = newest_budget_file['size']
+        logger.debug("Dropbox API call time elapsed: {time}s".format(time=elapsed))
 
         if r.status_code == requests.codes.ok:
             start = time.clock()
-            budget_json = r.text.replace("\n", "")
+            budget_json = r.text
             end = time.clock()
             elapsed = end - start
-            logger.debug("Remove budget newlines time elapsed: {time}s, {speed} KB/s".format(time=elapsed, speed=(len(r.text) // 1024 // elapsed)))
+            logger.debug("Dropbox API call response.text time elapsed: {time}s, {speed} KB/s".format(time=elapsed, speed=(budget_size // 1024 // elapsed)))
+
+            start = time.clock()
+            budget_json.replace("\n", "")
+            end = time.clock()
+            elapsed = end - start
+            logger.debug("Remove budget newlines time elapsed: {time}s, {speed} KB/s".format(time=elapsed, speed=(budget_size // 1024 // elapsed)))
             return budget_json
         else:
             self.raise_exception(r, 'Could not get the budget file')
