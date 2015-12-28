@@ -129,7 +129,7 @@ class Dropbox(object):
             if entry['.tag'] == 'file' and 'yfull' in entry['name']:
                 logger.debug(
                     "Found budget file at {path}\n\tClient modification time: {date}"
-                    .format(path=entry['path_lower'], date=entry['server_modified'])
+                    .format(path=entry['path_lower'], date=entry['client_modified'])
                 )
                 newest_budget_file = max(
                     newest_budget_file,
