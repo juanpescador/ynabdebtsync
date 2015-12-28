@@ -123,18 +123,18 @@ class Dropbox(object):
 
         # Build a dummy entry so max() can be used to maintain the newest
         # version of the budget.
-        newest_budget_file = {'server_modified': earliest_iso8601_date}
+        newest_budget_file = {'client_modified': earliest_iso8601_date}
 
         for entry in budget_dir_contents['entries']:
             if entry['.tag'] == 'file' and 'yfull' in entry['name']:
                 logger.debug(
-                    "Found budget file at {path}\n\tServer modification time: {date}"
+                    "Found budget file at {path}\n\tClient modification time: {date}"
                     .format(path=entry['path_lower'], date=entry['server_modified'])
                 )
                 newest_budget_file = max(
                     newest_budget_file,
                     entry,
-                    key=lambda x: dateutil.parser.parse(x['server_modified'])
+                    key=lambda x: dateutil.parser.parse(x['client_modified'])
                 )
 
         logger.debug("Using budget file at {budget_path}"
