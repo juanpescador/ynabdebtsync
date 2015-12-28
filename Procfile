@@ -1,1 +1,1 @@
-web: gunicorn ynabdebtsync.run:heroku_server --log-file=-
+web: gunicorn run:heroku_server --log-file=- --log-level debug
