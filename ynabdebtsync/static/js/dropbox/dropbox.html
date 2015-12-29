@@ -12,18 +12,24 @@
                         <span class="category">[[budget.path]]</span>
                         </div>
                     </div>
+                    <div class="extra content" data-ng-show="vm.thisBudgetPath === budget.path">
+                        <i class="check icon"></i>
+                    </div>
                 </a>
             </li>
         </ul>
         <button class="ui button" ng-click="vm.getBudgets('theirs')" data-ng-class="{'loading': vm.gettingTheirBudgets}">Get their budgets</button>
         <ul style="list-style: none">
             <li data-ng-repeat="budget in vm.otherBudgets" data-ng-click="vm.otherBudgetPath = budget.path">
-                <a class="ui green card" href="#" data-ng-click="vm.thisBudgetPath = budget.path">
+                <a class="ui green card" href="#" data-ng-click="vm.otherBudgetPath = budget.path">
                     <div class="content">
                         <div class="header">[[budget.name]]</div>
                         <div class="meta">
                         <span class="category">[[budget.path]]</span>
                         </div>
+                    </div>
+                    <div class="extra content" data-ng-show="vm.otherBudgetPath === budget.path">
+                        <i class="check icon"></i>
                     </div>
                 </a>
             </li>
