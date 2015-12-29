@@ -27,7 +27,7 @@
         function getAuthLink() {
             var redirectUri = $location.protocol() + '://' + $location.host() + ':' + $location.port();
             var uriEncodedRedirectUri = encodeURIComponent(redirectUri);
-            return '<a href="https://www.dropbox.com/1/oauth2/authorize?redirect_uri=' + uriEncodedRedirectUri + '&response_type=token&client_id=uo6kvpwo8rv9bqi">Authenticate with dropbox</a>';
+            return 'https://www.dropbox.com/1/oauth2/authorize?redirect_uri=' + uriEncodedRedirectUri + '&response_type=token&client_id=uo6kvpwo8rv9bqi';
         }
 
         function getAllBudgets(whose) {

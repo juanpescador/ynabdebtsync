@@ -1,21 +1,41 @@
 <div data-ng-controller="DropboxController as vm">
-    <a ng-show="vm.isAuthenticated()" data-ng-click="vm.logOut()">Log out</a>
-    <span ng-hide="vm.isAuthenticated()" data-ng-bind-html="vm.getAuthLink()"></span>
-    <button ng-click="vm.getBudgets('mine')">Get my budgets</button>
-    <ul>
-        <li data-ng-repeat="budget in vm.thisBudgets" data-ng-click="vm.thisBudgetPath = budget.path">[[budget.name]] - [[budget.path]]</li>
-    </ul>
-    <button ng-click="vm.getBudgets('theirs')">Get their budgets</button>
-    <ul>
-        <li data-ng-repeat="budget in vm.otherBudgets" data-ng-click="vm.otherBudgetPath = budget.path">[[budget.name]] - [[budget.path]]</li>
-    </ul>
-    <button type="button" data-ng-click="vm.compare()">Compare</button>
-    <div class="ui stackable two column grid" data-ng-show="vm.comparisonAttempted">
-        <div class="column">
-            <missing-transaction-list data-missing-transactions="vm.thisMissingTransactions" />
-        </div>
-        <div class="column">
-            <missing-transaction-list data-missing-transactions="vm.otherMissingTransactions" />
+    <a class="ui button" ng-show="vm.isAuthenticated()" data-ng-click="vm.logOut()">Log out</a>
+    <a class="ui button primary" href="[[vm.getAuthLink()]]" ng-hide="vm.isAuthenticated()">Authenticate with Dropbox</a>
+    <div data-ng-show="vm.isAuthenticated()">
+        <button class="ui button" ng-click="vm.getBudgets('mine')" data-ng-class="{'loading': vm.gettingOwnBudgets}">Get my budgets</button>
+        <ul style="list-style: none">
+            <li data-ng-repeat="budget in vm.thisBudgets">
+                <a class="ui green card" href="#" data-ng-click="vm.thisBudgetPath = budget.path">
+                    <div class="content">
+                        <div class="header">[[budget.name]]</div>
+                        <div class="meta">
+                        <span class="category">[[budget.path]]</span>
+                        </div>
+                    </div>
+                </a>
+            </li>
+        </ul>
+        <button class="ui button" ng-click="vm.getBudgets('theirs')" data-ng-class="{'loading': vm.gettingTheirBudgets}">Get their budgets</button>
+        <ul style="list-style: none">
+            <li data-ng-repeat="budget in vm.otherBudgets" data-ng-click="vm.otherBudgetPath = budget.path">
+                <a class="ui green card" href="#" data-ng-click="vm.thisBudgetPath = budget.path">
+                    <div class="content">
+                        <div class="header">[[budget.name]]</div>
+                        <div class="meta">
+                        <span class="category">[[budget.path]]</span>
+                        </div>
+                    </div>
+                </a>
+            </li>
+        </ul>
+        <button class="ui button primary" type="button" data-ng-click="vm.compare()" data-ng-class="{'loading': vm.comparisonExecuting}">Compare</button>
+        <div class="ui stackable two column grid" data-ng-show="vm.comparisonAttempted">
+            <div class="column">
+                <missing-transaction-list data-missing-transactions="vm.thisMissingTransactions" />
+            </div>
+            <div class="column">
+                <missing-transaction-list data-missing-transactions="vm.otherMissingTransactions" />
+            </div>
         </div>
     </div>
 </div>

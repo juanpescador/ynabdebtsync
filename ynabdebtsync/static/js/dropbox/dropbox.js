@@ -27,20 +27,39 @@
         vm.comparisonErrors = [];
         vm.sortTransactionsByDateAsc = sortTransactionsByDateAsc;
 
+        vm.gettingOwnBudgets = false;
+        vm.gettingTheirBudgets = false;
+
         function getBudgets(whose) {
+            var destinationBudget = null;
+            switch (whose) {
+                case 'mine':
+                    vm.gettingOwnBudgets = true;
+                    break;
+                case 'theirs':
+                    vm.gettingTheirBudgets = true;
+                    break;
+                default:
+                    console.log("[DropboxController]: " + whose + " is not a valid value for whose")
+            }
             return dropboxService.getAllBudgets(whose)
                 .then(function(data) {
                     switch (whose) {
                         case 'mine':
+                            vm.gettingOwnBudgets = false;
                             vm.thisBudgets = data;
                             break;
                         case 'theirs':
+                            vm.gettingTheirBudgets = false;
                             vm.otherBudgets = data;
                             break;
                         default:
                             console.log("[DropboxController]: " + whose + " is not a valid value for whose")
                     }
-                    return vm.thisBudgets;
+                    return destinationBudget;
+                }, function(response) {
+                    vm.gettingOwnBudgets = false;
+                    vm.gettingTheirBudgets = false;
                 });
         }
 
