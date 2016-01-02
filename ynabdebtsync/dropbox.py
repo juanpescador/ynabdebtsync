@@ -111,10 +111,43 @@ class Dropbox(object):
                 budget_dir_contents = budget_dir_contents_response.json()
             except ValueError:
                 self.raise_exception(budget_dir_contents_response,
-                                     'Could not retrieve list of budgets')
+                                     'Could not parse list of budgets')
         else:
             self.raise_exception(budget_dir_contents_response,
                                  'Could not retrieve list of budgets')
+
+        logger.debug("Budget directory has_more: {has_more}"
+                     .format(has_more=budget_dir_contents['has_more']))
+
+        if budget_dir_contents['has_more']:
+            # Bootstrap the loop using the initial response's data.
+            paginated_results = {}
+            paginated_results['cursor'] = budget_dir_contents['cursor']
+            paginated_results['has_more'] = True
+
+            while paginated_results['has_more']:
+                logger.debug("Processing cursor {cursor}"
+                    .format(cursor=paginated_results['cursor']))
+
+                data = {
+                    'cursor': paginated_results['cursor']
+                }
+                paginated_results_response = self.session.post(
+                    self.dropbox_endpoints['list_folder_continue'],
+                    data=json.dumps(data)
+                )
+                try:
+                    paginated_results = paginated_results_response.json()
+                except ValueError:
+                    self.raise_exception(paginated_results_response,
+                                         ('Could not parse paginated list of'
+                                          'budgets'))
+
+                budget_dir_contents['entries'].extend(paginated_results['entries'])
+                logger.debug("Added {entries_count} entries"
+                             .format(entries_count=len(budget_dir_contents['entries'])))
+
+        logger.debug("Processed list_folder paginated results")
 
         # Need to replace (add, actually) UTC timezone to the naive datetime
         # returned by datetime.max, otherwise comparisons fail with a
