@@ -10,9 +10,7 @@
                         <i class="file icon"></i>
                         <input type="file" id="thisBudget" data-file-property="vm.thisBudget" />
                     </label>
-                    <div class="ui input">
-                        <input type="text" placeholder="Target category name" data-ng-model="vm.thisTargetCategory" />
-                    </div>
+                    <category-chooser data-chosen-category-model="vm.thisTargetCategory">
                 </div>
             </div>
 
@@ -25,9 +23,7 @@
                         <i class="file icon"></i>
                         <input type="file" id="otherBudget" data-file-property="vm.otherBudget" />
                     </label>
-                    <div class="ui input">
-                        <input type="text" placeholder="Target category name" data-ng-model="vm.otherTargetCategory" />
-                    </div>
+                    <category-chooser data-chosen-category-model="vm.otherTargetCategory">
                 </div>
             </div>
             <div class="column">

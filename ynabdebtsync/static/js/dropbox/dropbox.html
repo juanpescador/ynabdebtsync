@@ -20,9 +20,7 @@
                         </a>
                     </li>
                 </ul>
-                <div class="ui input">
-                    <input type="text" placeholder="Target category name" data-ng-model="vm.thisTargetCategory" />
-                </div>
+                <category-chooser data-chosen-category-model="vm.thisTargetCategory">
             </div>
             <div class="column">
                 <button class="ui button" ng-click="vm.getBudgets('theirs')" data-ng-class="{'loading': vm.gettingTheirBudgets}">Get their budgets</button>
@@ -41,9 +39,7 @@
                         </a>
                     </li>
                 </ul>
-                <div class="ui input">
-                    <input type="text" placeholder="Target category name" data-ng-model="vm.otherTargetCategory" />
-                </div>
+                <category-chooser data-chosen-category-model="vm.otherTargetCategory">
             </div>
         </div>
         <div class="column">
