@@ -10,6 +10,7 @@
     function DropboxController($location, dropboxService) {
         var vm = this;
 
+        vm.comparisonStartDate = "";
         vm.getBudgets = getBudgets;
         vm.getAuthLink = getAuthLink;
         vm.isAuthenticated = isAuthenticated;
@@ -17,9 +18,11 @@
         vm.otherBudgetPath = "";
         vm.otherBudgets = [];
         vm.otherCategory = "";
+        vm.otherTargetCategory = "";
         vm.thisBudgetPath = "";
         vm.thisBudgets = [];
         vm.thisCategory = "";
+        vm.thisTargetCategory = "";
 
         vm.compare = compare;
         vm.comparisonAttempted = false;
