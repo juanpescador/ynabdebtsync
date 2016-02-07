@@ -295,6 +295,14 @@ def test_transactions_by_category_name_mixed_deleted_and_non_deleted_transaction
     transactions = ynab_budget.transactions_by_category_name('test debt category')
     assert_equal(len(transactions), 1)
 
+def test_payee_ids_to_names_returns_dictionary_of_ids_to_names():
+    ynab_budget = ynabbudget.YnabBudget(budget_json)
+
+    payees = ynab_budget.payee_ids_to_names()
+
+    assert_equal(payees["Payee/Transfer:37ADA60C-BE54-074E-F1B2-1FC8F2BE93CF"], "Transfer : Checking")
+    assert_equal(payees["D8EB026F-8762-54EB-019C-208AC519C084"], "A shop")
+
 # YnabComparer
 def test_categories_reconcile_if_category_totals_are_equal():
     budget_comparer = ynabbudget.YnabBudgetComparer(budget_json, "Test Debt Category", budget_json, "Test Debt Category")

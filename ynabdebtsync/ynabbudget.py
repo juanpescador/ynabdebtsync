@@ -120,6 +120,15 @@ class YnabBudget(object):
 
         return running_total
 
+    def payee_ids_to_names(self):
+        ids_to_names = {}
+
+        for payee_data in self.data["payees"]:
+            payee_id = payee_data["entityId"]
+            payee_name = payee_data["name"]
+            ids_to_names[payee_id] = payee_name
+        return ids_to_names
+
 class YnabBudgetMalformedError(Exception):
     """Exception raised when the YNAB budget JSON is malformed."""
     def __init__(self, message, inner_message="", budget_json=""):
