@@ -14,7 +14,9 @@
         vm.comparisonAttempted = false;
         vm.comparisonExecuting = false;
         vm.comparisonErrors = [];
+        vm.otherTargetCategory = "";
         vm.sortTransactionsByDateAsc = sortTransactionsByDateAsc;
+        vm.thisTargetCategory = "";
 
         function compareBudgets() {
             vm.comparisonExecuting = true;
