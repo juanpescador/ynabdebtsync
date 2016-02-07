@@ -14,6 +14,7 @@
       <thead>
           <tr><th>Type</th>
               <th>Date</th>
+        <th>Payee</th>
         <th>Memo</th>
         <th>Amount</th>
       </tr></thead>
@@ -28,6 +29,7 @@
             </div>
           </td>
           <td><nobr>[[txn.date]]</nobr></td>
+          <td>[[ payees[txn.payeeId] ]]</td>
           <td>[[txn.memo]]</td>
           <td>[[txn.amount > 0 ? txn.amount : -txn.amount]]</td>
         </tr>

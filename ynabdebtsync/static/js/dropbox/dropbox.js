@@ -18,9 +18,13 @@
         vm.otherBudgetPath = "";
         vm.otherBudgets = [];
         vm.otherTargetCategory = "";
+        vm.otherMissingTransactions = [];
+        vm.otherMissingPayees = {};
         vm.thisBudgetPath = "";
         vm.thisBudgets = [];
         vm.thisTargetCategory = "";
+        vm.thisMissingTransactions = [];
+        vm.thisMissingPayees = {};
 
         vm.compare = compare;
         vm.comparisonAttempted = false;
@@ -84,8 +88,16 @@
                     vm.thisMissingTransactions = response.data.this_missing;
                     vm.thisMissingTransactions.sort(vm.sortTransactionsByDateAsc);
 
+                    // This budget's missing transactions come from other
+                    // budget, so the payees are also from other budget.
+                    vm.thisMissingPayees = response.data.other_payees;
+
                     vm.otherMissingTransactions = response.data.other_missing;
                     vm.otherMissingTransactions.sort(vm.sortTransactionsByDateAsc);
+
+                    // Other budget's missing transactions come from this
+                    // budget, so the payees are also from this budget.
+                    vm.otherMissingPayees = response.data.this_payees;
 
                     vm.comparisonAttempted = true;
                     vm.comparisonExecuting = false;

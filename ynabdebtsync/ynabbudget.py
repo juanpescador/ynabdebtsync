@@ -89,6 +89,11 @@ class YnabBudget(object):
                     # If the subtransaction already has a memo leave it as is.
                     if "memo" not in subtransaction and "memo" in transaction:
                         subtransaction["memo"] = transaction["memo"]
+                    # Subtransactions don't have the payee ID, hoist it down to
+                    # be able to display the payee for the subtransaction.
+                    # Not all transactions have a payeeId.
+                    if "payeeId" in transaction:
+                        subtransaction["payeeId"] = transaction["payeeId"]
                 transactions_to_add.extend(
                     self._transactions_from_category_id(
                         category_id,

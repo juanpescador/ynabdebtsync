@@ -9,7 +9,8 @@
         return {
             restrict: 'E',
             scope: {
-                missingTransactions: '='
+                missingTransactions: '=',
+                payees: '='
             },
             templateUrl: '/static/js/widgets/missingTransactionList.html'
         };
