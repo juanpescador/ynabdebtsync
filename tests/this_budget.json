@@ -497,7 +497,20 @@
 			"entityVersion": "A-121",
 			"autoFillCategoryId": null,
 			"autoFillMemo": "Split"
+		},
+		{
+			"entityId": "45C13591-F8762-54EB-019C-208AC519C084",
+			"entityType": "payee",
+			"renameConditions": null,
+			"name": "This budget shop",
+			"locations": null,
+			"autoFillAmount": -10,
+			"enabled": true,
+			"entityVersion": "A-121",
+			"autoFillCategoryId": null,
+			"autoFillMemo": "Split"
 		}
+
 	],
 	"scheduledTransactions": [],
 	"transactions": [

@@ -482,3 +482,9 @@ class YnabBudgetComparer(object):
     def _get_other_budget_transactions_missing_from_this_budget(self, other_amount):
         this_amount = -other_amount
         return self._get_missing_transactions_of_amount(this_amount)
+
+    def get_this_payees(self):
+        return self.this_budget.payee_ids_to_names()
+
+    def get_other_payees(self):
+        return self.other_budget.payee_ids_to_names()

@@ -1043,3 +1043,17 @@ def test_get_missing_transactions_with_start_date_ignores_past_transactions():
     assert_equal(other_missing[0]["date"], "2015-05-28")
     assert_equal(other_missing[0]["amount"], -1.5)
     assert_equal(other_missing[0]["memo"], "Loan for wine")
+
+def test_get_this_payees_returns_this_budgets_payees():
+    budget_comparer = ynabbudget.YnabBudgetComparer(this_budget_json, "Test Debt Category", other_budget_json, "Test Debt Category")
+
+    this_payees = budget_comparer.get_this_payees()
+
+    assert_equal(this_payees["45C13591-F8762-54EB-019C-208AC519C084"], "This budget shop")
+
+def test_get_other_payees_returns_other_budgets_payees():
+    budget_comparer = ynabbudget.YnabBudgetComparer(this_budget_json, "Test Debt Category", other_budget_json, "Test Debt Category")
+
+    other_payees = budget_comparer.get_other_payees()
+
+    assert_equal(other_payees["8F925C3-F8762-54EB-019C-208AC519C084"], "Other budget shop")
