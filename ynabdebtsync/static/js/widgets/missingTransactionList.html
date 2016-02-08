@@ -1,4 +1,4 @@
-<div data-ng-show="missingTransactions.length > 0">
+<div data-ng-show="vm.missingTransactions.length > 0">
     <h2 class="ui header">
         <div class="content">
             Missing transactions
@@ -19,7 +19,7 @@
         <th>Amount</th>
       </tr></thead>
       <tbody>
-        <tr data-ng-repeat="txn in missingTransactions">
+        <tr data-ng-repeat="txn in vm.missingTransactions">
           <td>
             <div class="ui center green label" data-ng-show="txn.amount < 0">
               <i class="plus icon"></i> Inflow
@@ -29,20 +29,21 @@
             </div>
           </td>
           <td><nobr>[[txn.date]]</nobr></td>
-          <td>[[ payees[txn.payeeId] ]]</td>
+          <td>[[ vm.payees[txn.payeeId] ]]</td>
           <td>[[txn.memo]]</td>
           <td>[[txn.amount > 0 ? txn.amount : -txn.amount]]</td>
         </tr>
       </tbody>
       <tfoot>
-        <tr><th>[[missingTransactions.length]] missing transactions</th>
+        <tr><th>[[vm.missingTransactions.length]] missing transactions</th>
         <th></th>
         <th></th>
         <th></th>
       </tr></tfoot>
     </table>
+    <button class="ui button primary" type="button" data-ng-click="vm.downloadMissingTransactions()">Download CSV to import into YNAB</button>
 </div>
-<div data-ng-hide="missingTransactions.length > 0">
+<div data-ng-hide="vm.missingTransactions.length > 0">
     <p></p>
     <div class="ui icon message">
       <i class="thumbs outline up icon"></i>
