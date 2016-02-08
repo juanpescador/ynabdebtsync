@@ -9,7 +9,7 @@
         return {
             restrict: 'E',
             scope: {
-                startDateModel: '='
+                chosenDateModel: '='
             },
             templateUrl: '/static/js/widgets/dateChooser.html'
         };
