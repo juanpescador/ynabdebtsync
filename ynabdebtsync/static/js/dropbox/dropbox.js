@@ -17,11 +17,9 @@
         vm.logOut = logOut;
         vm.otherBudgetPath = "";
         vm.otherBudgets = [];
-        vm.otherCategory = "";
         vm.otherTargetCategory = "";
         vm.thisBudgetPath = "";
         vm.thisBudgets = [];
-        vm.thisCategory = "";
         vm.thisTargetCategory = "";
 
         vm.compare = compare;
