@@ -58,12 +58,16 @@
                 </ul>
             </div>
         </div>
-        <div class="ui stackable two column grid" data-ng-show="vm.comparisonAttempted">
-            <div class="column">
-                <missing-transaction-list data-missing-transactions="vm.thisMissingTransactions" data-payees="vm.thisMissingPayees" />
-            </div>
-            <div class="column">
-                <missing-transaction-list data-missing-transactions="vm.otherMissingTransactions" data-payees="vm.otherMissingPayees" />
+        <div class="row" data-ng-show="vm.comparisonAttempted">
+            <div class="column sixteen wide">
+                <div class="ui two column stackable grid">
+                    <div class="column">
+                        <missing-transaction-list data-missing-transactions="vm.thisMissingTransactions" data-payees="vm.thisMissingPayees" />
+                    </div>
+                    <div class="column">
+                        <missing-transaction-list data-missing-transactions="vm.otherMissingTransactions" data-payees="vm.otherMissingPayees" />
+                    </div>
+                </div>
             </div>
         </div>
     </div>
