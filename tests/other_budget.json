@@ -498,6 +498,19 @@
 			"autoFillCategoryId": null,
 			"autoFillMemo": "Split"
 		}
+,
+		{
+			"entityId": "8F925C3-F8762-54EB-019C-208AC519C084",
+			"entityType": "payee",
+			"renameConditions": null,
+			"name": "Other budget shop",
+			"locations": null,
+			"autoFillAmount": -10,
+			"enabled": true,
+			"entityVersion": "A-121",
+			"autoFillCategoryId": null,
+			"autoFillMemo": "Split"
+		}
 	],
 	"scheduledTransactions": [],
 	"transactions": [

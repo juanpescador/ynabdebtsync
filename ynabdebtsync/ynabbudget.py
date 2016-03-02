@@ -89,6 +89,11 @@ class YnabBudget(object):
                     # If the subtransaction already has a memo leave it as is.
                     if "memo" not in subtransaction and "memo" in transaction:
                         subtransaction["memo"] = transaction["memo"]
+                    # Subtransactions don't have the payee ID, hoist it down to
+                    # be able to display the payee for the subtransaction.
+                    # Not all transactions have a payeeId.
+                    if "payeeId" in transaction:
+                        subtransaction["payeeId"] = transaction["payeeId"]
                 transactions_to_add.extend(
                     self._transactions_from_category_id(
                         category_id,
@@ -119,6 +124,15 @@ class YnabBudget(object):
             running_total += transaction["amount"]
 
         return running_total
+
+    def payee_ids_to_names(self):
+        ids_to_names = {}
+
+        for payee_data in self.data["payees"]:
+            payee_id = payee_data["entityId"]
+            payee_name = payee_data["name"]
+            ids_to_names[payee_id] = payee_name
+        return ids_to_names
 
 class YnabBudgetMalformedError(Exception):
     """Exception raised when the YNAB budget JSON is malformed."""
@@ -473,3 +487,9 @@ class YnabBudgetComparer(object):
     def _get_other_budget_transactions_missing_from_this_budget(self, other_amount):
         this_amount = -other_amount
         return self._get_missing_transactions_of_amount(this_amount)
+
+    def get_this_payees(self):
+        return self.this_budget.payee_ids_to_names()
+
+    def get_other_payees(self):
+        return self.other_budget.payee_ids_to_names()

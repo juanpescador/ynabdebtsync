@@ -92,7 +92,12 @@ class DropboxBudgetComparison(Resource):
         method_finish = time.clock()
         method_elapsed = method_finish - method_start
         flask_app.logger.info("Finished comparing budgets. Time elapsed: {time}s".format(time=method_elapsed))
-        return {"this_missing": missing_txns[0], "other_missing": missing_txns[1]}
+
+        this_payees = comparer.get_this_payees()
+        other_payees = comparer.get_other_payees()
+
+        return {"this_missing": missing_txns[0], "other_missing": missing_txns[1],
+                "this_payees": this_payees, "other_payees": other_payees}
 
 api.add_resource(CategoryComparison, "/api/categorycomparison")
 api.add_resource(DropboxBudgets, "/api/dropboxbudgets/<string:whose>")
