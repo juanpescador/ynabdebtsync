@@ -24,6 +24,7 @@
     function MissingTransactionController() {
         var vm = this;
         vm.downloadMissingTransactions = downloadMissingTransactions;
+        vm.missingTransactionsTotal = missingTransactionsTotal;
 
         function downloadMissingTransactions() {
             // Adapted from http://stackoverflow.com/questions/14964035/how-to-export-javascript-array-info-to-csv-on-client-side
@@ -78,6 +79,20 @@
             var encodedCsvUri = encodeURI(csvContent);
             window.open(encodedCsvUri);
         }
+
+        function missingTransactionsTotal() {
+            var total = 0;
+
+            // missingTransactions is undefined until the comparison is
+            // complete, but the $digest cycle calls this as from page load.
+            if (typeof vm.missingTransactions !== "undefined") {
+                vm.missingTransactions.forEach(function(txn, index) {
+                    total += txn.amount;
+                });
+            }
+
+            return total;
+        };
 
         // Used to wrap CSV fields with quotes, so any commas contained in the
         // field's value aren't incorrectly parsed as a field separator.

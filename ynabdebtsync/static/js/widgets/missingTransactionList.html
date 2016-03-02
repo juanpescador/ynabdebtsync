@@ -35,10 +35,14 @@
         </tr>
       </tbody>
       <tfoot>
-        <tr><th>[[vm.missingTransactions.length]] missing transactions</th>
+        <tr><th colspan="2">[[vm.missingTransactions.length]] missing transactions</th>
         <th></th>
         <th></th>
-        <th></th>
+        <th>
+            <span data-ng-show="vm.missingTransactionsTotal < 0">You are owed:</span>
+            <span data-ng-hide="vm.missingTransactionsTotal < 0">You owe:</span>
+            [[vm.missingTransactionsTotal()]]
+        </th>
       </tr></tfoot>
     </table>
     <button class="ui button primary" type="button" data-ng-click="vm.downloadMissingTransactions()">Download CSV to import into YNAB</button>
