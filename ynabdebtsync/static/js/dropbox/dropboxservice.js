@@ -53,14 +53,17 @@
             accessToken = token;
         }
 
-        function compare(thisBudgetPath, otherBudgetPath) {
+        function compare(comparisonConfig) {
             var request = {
                 method: 'POST',
                 url: '/api/dropboxbudgetcomparison',
                 data: {
                     access_token: accessToken,
-                    this_budget_path: thisBudgetPath,
-                    other_budget_path: otherBudgetPath
+                    comparison_start_date: comparisonConfig.comparisonStartDate,
+                    this_budget_path: comparisonConfig.thisBudgetPath,
+                    this_target_category: comparisonConfig.thisTargetCategory,
+                    other_budget_path: comparisonConfig.otherBudgetPath,
+                    other_target_category: comparisonConfig.otherTargetCategory
                 }
             }
 

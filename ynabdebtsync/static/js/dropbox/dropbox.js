@@ -83,7 +83,15 @@
         function compare() {
             vm.comparisonExecuting = true;
 
-            dropboxService.compare(vm.thisBudgetPath, vm.otherBudgetPath)
+            var comparisonConfig = {
+                comparisonStartDate: vm.comparisonStartDate,
+                thisBudgetPath: vm.thisBudgetPath,
+                thisTargetCategory: vm.thisTargetCategory,
+                otherBudgetPath: vm.otherBudgetPath,
+                otherTargetCategory: vm.otherTargetCategory
+            };
+
+            dropboxService.compare(comparisonConfig)
                 .then(function(response) {
                     vm.thisMissingTransactions = response.data.this_missing;
                     vm.thisMissingTransactions.sort(vm.sortTransactionsByDateAsc);

@@ -76,10 +76,10 @@ class DropboxBudgetComparison(Resource):
         elapsed = end - start
         flask_app.logger.debug("Get other budget time elapsed: {time}s".format(time=elapsed))
 
-        this_target_category = "eli"
-        other_target_category = "john"
+        this_target_category = json['this_target_category']
+        other_target_category = json['other_target_category']
 
-        start_date = "2015"
+        start_date = json['comparison_start_date']
 
         comparer = YnabBudgetComparer(this_json, this_target_category, other_json, other_target_category)
         comparer.set_start_date(start_date)
