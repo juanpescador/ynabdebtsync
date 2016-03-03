@@ -41,7 +41,7 @@
         <th>
             <span data-ng-show="vm.missingTransactionsTotal < 0">You are owed:</span>
             <span data-ng-hide="vm.missingTransactionsTotal < 0">You owe:</span>
-            [[vm.missingTransactionsTotal()]]
+            [[vm.missingTransactionsTotal() | number:2]]
         </th>
       </tr></tfoot>
     </table>
