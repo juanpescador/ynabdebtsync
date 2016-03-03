@@ -43,8 +43,8 @@
             </div>
         </div>
         <div class="column">
-            <div class="ui input">
-                <input type="text" placeholder="Comparison start date" data-ng-model="vm.comparisonStartDate" />
+            <div>
+                <date-chooser data-chosen-date-model="vm.comparisonStartDate">
             </div>
             <button class="ui button primary" type="button" data-ng-click="vm.compare()" data-ng-class="{'loading': vm.comparisonExecuting}">Compare</button>
             <div class="ui error message" data-ng-show="vm.comparisonErrors.length > 0">
