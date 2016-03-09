@@ -30,10 +30,10 @@
             return 'https://www.dropbox.com/1/oauth2/authorize?redirect_uri=' + uriEncodedRedirectUri + '&response_type=token&client_id=uo6kvpwo8rv9bqi';
         }
 
-        function getAllBudgets(whose) {
+        function getAllBudgets(targetBudget) {
             var request = {
                 method: 'POST',
-                url: '/api/dropboxbudgets/' + whose,
+                url: '/api/dropboxbudgets/' + targetBudget,
                 data: {
                     access_token: accessToken
                 }

@@ -36,16 +36,16 @@ class CategoryComparison(Resource):
         return {"key": "value"}
 
 class DropboxBudgets(Resource):
-    def post(self, whose):
+    def post(self, targetBudget):
         token = request.get_json()['access_token']
         db = Dropbox(token)
 
-        if whose == 'mine':
+        if targetBudget == 'this':
             start = time.clock()
             budgets = db.get_own_budgets()
             end = time.clock()
             flask_app.logger.debug("Get own budgets time elapsed: {time}s".format(time=(end - start)))
-        elif whose == 'theirs':
+        elif targetBudget == 'other':
             start = time.clock()
             budgets = db.get_their_budgets()
             end = time.clock()
@@ -100,6 +100,6 @@ class DropboxBudgetComparison(Resource):
                 "this_payees": this_payees, "other_payees": other_payees}
 
 api.add_resource(CategoryComparison, "/api/categorycomparison")
-api.add_resource(DropboxBudgets, "/api/dropboxbudgets/<string:whose>")
+api.add_resource(DropboxBudgets, "/api/dropboxbudgets/<string:targetBudget>")
 api.add_resource(DropboxBudgetComparison, "/api/dropboxbudgetcomparison")
 

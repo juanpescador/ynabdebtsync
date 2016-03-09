@@ -35,31 +35,31 @@
         vm.gettingOwnBudgets = false;
         vm.gettingTheirBudgets = false;
 
-        function getBudgets(whose) {
+        function getBudgets(targetBudget) {
             var destinationBudget = null;
-            switch (whose) {
-                case 'mine':
+            switch (targetBudget) {
+                case 'this':
                     vm.gettingOwnBudgets = true;
                     break;
-                case 'theirs':
+                case 'other':
                     vm.gettingTheirBudgets = true;
                     break;
                 default:
-                    console.log("[DropboxController]: " + whose + " is not a valid value for whose")
+                    console.log("[DropboxController]: " + targetBudget + " is not a valid value for targetBudget")
             }
-            return dropboxService.getAllBudgets(whose)
+            return dropboxService.getAllBudgets(targetBudget)
                 .then(function(data) {
-                    switch (whose) {
-                        case 'mine':
+                    switch (targetBudget) {
+                        case 'this':
                             vm.gettingOwnBudgets = false;
                             vm.thisBudgets = data;
                             break;
-                        case 'theirs':
+                        case 'other':
                             vm.gettingTheirBudgets = false;
                             vm.otherBudgets = data;
                             break;
                         default:
-                            console.log("[DropboxController]: " + whose + " is not a valid value for whose")
+                            console.log("[DropboxController]: " + targetBudget + " is not a valid value for targetBudget")
                     }
                     return destinationBudget;
                 }, function(response) {
