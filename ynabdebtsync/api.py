@@ -4,6 +4,7 @@ import werkzeug
 import time
 
 from server import flask_app
+from api_argument_types import non_empty_string
 from flask import request
 from flask_restful import Resource, Api, reqparse
 from ynabbudget import YnabBudgetComparer
@@ -15,16 +16,20 @@ class CategoryComparison(Resource):
     def post(self):
         parser = reqparse.RequestParser()
         parser.add_argument('this_budget', required=True, type=werkzeug.datastructures.FileStorage, location='files')
+        parser.add_argument('other_budget', required=True, type=werkzeug.datastructures.FileStorage, location='files')
+        parser.add_argument('this_target_category', required=True, type=non_empty_string, location='form')
+        parser.add_argument('other_target_category', required=True, type=non_empty_string, location='form')
+        parser.add_argument('start_date', required=True, location='form')
         args = parser.parse_args()
 
-        this_file = request.files["this_budget"]
+        this_file = args["this_budget"]
         this_json = this_file.read().replace("\n", "")
-        this_target_category = request.form["this_target_category"]
+        this_target_category = args["this_target_category"]
         other_file = request.files["other_budget"]
         other_json = other_file.read().replace("\n", "")
-        other_target_category = request.form["other_target_category"]
+        other_target_category = args["other_target_category"]
 
-        start_date = request.form["start_date"]
+        start_date = args["start_date"]
 
         comparer = YnabBudgetComparer(this_json, this_target_category, other_json, other_target_category)
         comparer.set_start_date(start_date)
@@ -100,6 +105,6 @@ class DropboxBudgetComparison(Resource):
                 "this_payees": this_payees, "other_payees": other_payees}
 
 api.add_resource(CategoryComparison, "/api/categorycomparison")
-api.add_resource(DropboxBudgets, "/api/dropboxbudgets/<string:targetBudget>")
+api.add_resource(DropboxBudgets, "/api/dropboxbudgets/<target_budget:targetBudget>")
 api.add_resource(DropboxBudgetComparison, "/api/dropboxbudgetcomparison")
 
