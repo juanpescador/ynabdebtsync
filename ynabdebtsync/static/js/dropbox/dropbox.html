@@ -4,41 +4,11 @@
     <div class="ui stackable two column grid" data-ng-show="vm.isAuthenticated()">
         <div class="row">
             <div class="column">
-                <button class="ui button" ng-click="vm.getBudgets('this')" data-ng-class="{'loading': vm.gettingOwnBudgets}">Get my budgets</button>
-                <ul style="list-style: none">
-                    <li data-ng-repeat="budget in vm.thisBudgets">
-                        <a class="ui green card" href="#" data-ng-click="vm.thisBudgetPath = budget.path">
-                            <div class="content">
-                                <div class="header">[[budget.name]]</div>
-                                <div class="meta">
-                                    <span class="category">[[budget.path]]</span>
-                                </div>
-                            </div>
-                            <div class="extra content" data-ng-show="vm.thisBudgetPath === budget.path">
-                                <i class="check icon"></i>
-                            </div>
-                        </a>
-                    </li>
-                </ul>
+                <dropbox-budget-chooser data-target-budget="this" data-target-budget-path="vm.thisBudgetPath">
                 <category-chooser data-chosen-category-model="vm.thisTargetCategory">
             </div>
             <div class="column">
-                <button class="ui button" ng-click="vm.getBudgets('other')" data-ng-class="{'loading': vm.gettingTheirBudgets}">Get their budgets</button>
-                <ul style="list-style: none">
-                    <li data-ng-repeat="budget in vm.otherBudgets" data-ng-click="vm.otherBudgetPath = budget.path">
-                        <a class="ui green card" href="#" data-ng-click="vm.otherBudgetPath = budget.path">
-                            <div class="content">
-                                <div class="header">[[budget.name]]</div>
-                                <div class="meta">
-                                    <span class="category">[[budget.path]]</span>
-                                </div>
-                            </div>
-                            <div class="extra content" data-ng-show="vm.otherBudgetPath === budget.path">
-                                <i class="check icon"></i>
-                            </div>
-                        </a>
-                    </li>
-                </ul>
+                <dropbox-budget-chooser data-target-budget="other" data-target-budget-path="vm.otherBudgetPath">
                 <category-chooser data-chosen-category-model="vm.otherTargetCategory">
             </div>
         </div>

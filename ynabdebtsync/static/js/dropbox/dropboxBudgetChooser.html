@@ -1,0 +1,9 @@
+<div class="ui search selection dropdown" data-ng-class="{'loading': vm.gettingBudgets}" data-ng-click="vm.getBudgets()">
+  <input type="hidden" name="budget" value="kp">
+  <i class="dropdown icon"></i>
+  <input class="search">
+  <div class="default text">Select a budget</div>
+  <div class="menu">
+    <div class="item" data-ng-repeat="budget in vm.budgets" data-ng-click="vm.targetBudgetPath = budget.path">[[budget.name]]</div>
+  </div>
+</div>
