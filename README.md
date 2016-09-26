@@ -5,7 +5,19 @@ person. If you track the money you lend to someone with YNAB and they do the
 same, this web application automates the process of finding which transactions
 are missing from each other’s budget so the totals tally up.
 
+[This article on my blog][BlogArticle] explains when and why this is useful,
+while [this one][AlgorithmArticle] describes the algorithm (basically it’s an
+algorithm to find missing transactions, i.e. errors, in double-entry
+bookkeeping).
+
 ![](docs/img/demo-walkthrough.gif)
+
+YNAB Debt Sync can compare budgets stored in Dropbox. Note that this requires a
+lot of trust between participants, as the other person is able to peruse your
+entire budget. Share your “YNAB” directory with someone who already uses YNAB
+(and have them share theirs with you), so that you have a “YNAB” directory (your
+budget) and a “YNAB (1)” directory (their budget). The server temporarily stores
+both budgets in RAM, so only use the Heroku-hosted app for dummy budgets.
 
 ## Dependencies ##
 
@@ -54,3 +66,5 @@ From the project’s root, execute
 
 [YNAB Debt Sync]: https://ynabdebtsync.herokuapp.com
 [HerokuSetup document]: ./docs/HerokuSetup.md
+[BlogArticle]: http://maian.org/blog/2015/08/managing-short-term-lending-with-two-way-ynab/
+[AlgorithmArticle]: http://maian.org/blog/2015/08/efficiently-finding-incorrect-transactions-in-double-entry-bookkeeping/
